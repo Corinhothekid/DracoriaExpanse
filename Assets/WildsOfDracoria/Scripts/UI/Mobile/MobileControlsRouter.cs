@@ -1,6 +1,7 @@
 using UnityEngine;
 using WildsOfDracoria.Combat;
 using WildsOfDracoria.Player;
+using WildsOfDracoria.Professions;
 using WildsOfDracoria.UI;
 
 namespace WildsOfDracoria.UI.Mobile
@@ -11,6 +12,7 @@ namespace WildsOfDracoria.UI.Mobile
         [SerializeField] private ThirdPersonPlayerController playerController;
         [SerializeField] private PlayerCombat playerCombat;
         [SerializeField] private InventoryUI inventoryUI;
+        [SerializeField] private ProfessionUI professionUI;
         [SerializeField] private NotificationPopupUI notificationPopupUI;
 
         private bool sprintHeld;
@@ -31,6 +33,11 @@ namespace WildsOfDracoria.UI.Mobile
             if (inventoryUI == null)
             {
                 inventoryUI = FindObjectOfType<InventoryUI>(true);
+            }
+
+            if (professionUI == null)
+            {
+                professionUI = FindObjectOfType<ProfessionUI>(true);
             }
 
             if (notificationPopupUI == null)
@@ -98,7 +105,7 @@ namespace WildsOfDracoria.UI.Mobile
                     inventoryUI?.Toggle();
                     break;
                 case MobileControlAction.Skills:
-                    ShowPrototypeNotice("Skills panel placeholder");
+                    professionUI?.Toggle();
                     break;
                 case MobileControlAction.Map:
                     ShowPrototypeNotice("Map placeholder");
