@@ -27,13 +27,17 @@ The world does not revolve around the player. It exists with the player, changes
 
 ## Prototype Goal
 
-This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 002: Basic Combat & Enemy AI**. It proves the foundation for MMO-style movement, interaction, character data, skills, inventory, fishing, NPC dialogue, combat, enemy drops, and local save/load.
+This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 003: Mobile Controls & Action Bar**. It proves the foundation for MMO-style movement, interaction, character data, skills, inventory, fishing, NPC dialogue, combat, enemy drops, mobile input, and local save/load.
 
 ## Included Systems
 
 - Third-person WASD movement with run and jump
-- Camera follow
-- Mobile-ready player input methods
+- Camera follow with swipe/drag support
+- Virtual joystick movement
+- Mobile attack, block, dodge, sprint, and interact buttons
+- Reusable 6-slot empty action bar
+- Basic menu buttons for Inventory, Skills, Map, and Character
+- Notification and XP popup foundation
 - Ironhaven placeholder village scene builder
 - Dock/harbor area
 - Blacksmith area
@@ -47,7 +51,6 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 - Captain Alden dialogue
 - JSON save/load placeholder
 - Player health and stamina
-- Sprint stamina drain and stamina regeneration
 - Basic attack, block, and dodge
 - Weapon data foundation
 - Damage system with `IDamageable`
@@ -57,18 +60,21 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 
 ## Unity Setup
 
-1. Create a Unity 3D project.
+1. Create or open a Unity 3D project.
 2. Use this repository as the project root, or copy `Assets/WildsOfDracoria` into an existing Unity project.
-3. Open the project in Unity.
-4. Let scripts compile.
-5. Create an empty scene named `IronhavenPrototype` under `Assets/WildsOfDracoria/Scenes`.
-6. In Unity, choose `Wilds of Dracoria > Build Ironhaven Prototype Scene`.
+3. Open the project in Unity and let scripts compile.
+4. Create an empty scene named `IronhavenPrototype` under `Assets/WildsOfDracoria/Scenes`.
+5. Choose `Wilds of Dracoria > Build Ironhaven Prototype Scene`.
+6. Choose `Wilds of Dracoria > Add Mobile Controls To Current Scene`.
 7. Save the scene.
 8. Press Play.
 
 ## Controls
 
+PC testing:
+
 - `WASD` / arrow keys: Move
+- `Middle Mouse Drag`: Rotate camera
 - `Left Shift`: Sprint
 - `Space`: Jump
 - `E`: Interact
@@ -78,6 +84,17 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 - `I`: Toggle inventory
 - `F5`: Save
 - `F9`: Load
+
+Mobile UI:
+
+- Left joystick: Move
+- Drag open screen area: Rotate camera
+- `ATK`: Attack
+- `BLK`: Hold block
+- `DOD`: Dodge
+- `RUN`: Hold sprint
+- `USE`: Interact
+- `INV`, `SKL`, `MAP`, `CHR`: Basic menu buttons
 
 ## Folder Structure
 
@@ -99,16 +116,14 @@ Assets/
       Save/
       Systems/
       UI/
+        Mobile/
 Docs/
 ```
 
 ## Next Steps
 
-1. Add mobile joystick and combat buttons.
-2. Replace primitive placeholders with low-poly fantasy art.
-3. Add enemy spawn points and respawning.
-4. Add mining, blacksmithing, cooking, and sailing loops.
-5. Add Captain Alden's first quest.
-6. Add character creation and family names.
-7. Add a simple local economy.
-8. Add networking only after the single-player prototype feels good.
+1. Replace primitive placeholders with low-poly fantasy art.
+2. Add enemy spawn points and respawning.
+3. Tune touch camera sensitivity after device testing.
+4. Add professions and quests later.
+5. Add networking only after the single-player prototype feels good.
