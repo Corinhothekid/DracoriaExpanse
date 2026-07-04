@@ -32,6 +32,7 @@ namespace WildsOfDracoria.Systems
 
             Instance = this;
             characterData = CharacterData.CreateDefault();
+            characterData.NormalizeInventory();
             EnsureProfessionManager();
         }
 
@@ -60,9 +61,9 @@ namespace WildsOfDracoria.Systems
             }
         }
 
-        public void AddItem(string itemName, int quantity = 1)
+        public void AddItem(string itemId, int quantity = 1)
         {
-            characterData.AddInventoryItem(itemName, quantity);
+            characterData.AddInventoryItem(itemId, quantity);
             RefreshInventoryUI();
         }
 
@@ -92,6 +93,7 @@ namespace WildsOfDracoria.Systems
             }
 
             characterData = loaded;
+            characterData.NormalizeInventory();
             ProfessionManager.Instance?.RefreshFromCharacterData();
             ApplyLoadedDataToPlayer();
             RefreshInventoryUI();
