@@ -19,6 +19,11 @@ namespace WildsOfDracoria.CharacterCreation
                 characterCreationUI = FindObjectOfType<CharacterCreationUI>(true);
             }
 
+            if (characterCreationUI == null)
+            {
+                characterCreationUI = CharacterCreationUIFactory.Create();
+            }
+
             if (playerRoot == null)
             {
                 var player = GameObject.FindGameObjectWithTag("Player");
