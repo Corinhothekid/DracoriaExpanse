@@ -2,7 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using WildsOfDracoria.AI;
 using WildsOfDracoria.CameraRig;
+using WildsOfDracoria.Combat;
 using WildsOfDracoria.Interaction;
 using WildsOfDracoria.Player;
 using WildsOfDracoria.Systems;
@@ -23,6 +25,7 @@ namespace WildsOfDracoria.EditorTools
             CreateCamera(player.transform);
             CreateWorld(materials);
             CreateInteractables(materials);
+            CreateEnemies(materials);
             CreateUI(player);
 
             RenderSettings.ambientLight = new Color(0.65f, 0.7f, 0.8f);
@@ -57,7 +60,8 @@ namespace WildsOfDracoria.EditorTools
                 forge = MakeMaterial("Prototype_Forge", new Color(0.85f, 0.28f, 0.08f)),
                 player = MakeMaterial("Prototype_Player", new Color(0.1f, 0.35f, 0.85f)),
                 npc = MakeMaterial("Prototype_NPC", new Color(0.85f, 0.75f, 0.22f)),
-                tree = MakeMaterial("Prototype_Tree", new Color(0.12f, 0.38f, 0.16f))
+                tree = MakeMaterial("Prototype_Tree", new Color(0.12f, 0.38f, 0.16f)),
+                wolf = MakeMaterial("Prototype_Wolf", new Color(0.28f, 0.28f, 0.25f))
             };
         }
 
@@ -78,6 +82,7 @@ namespace WildsOfDracoria.EditorTools
         {
             var player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             player.name = "Player";
+            player.tag = "Player";
             player.transform.position = new Vector3(0f, 1f, -4f);
             player.GetComponent<Renderer>().sharedMaterial = material;
             Object.DestroyImmediate(player.GetComponent<CapsuleCollider>());
@@ -86,6 +91,8 @@ namespace WildsOfDracoria.EditorTools
             trigger.isTrigger = true;
             trigger.radius = 2.25f;
             player.AddComponent<PlayerInteractor>();
+            player.AddComponent<PlayerVitals>();
+            player.AddComponent<PlayerCombat>();
             player.AddComponent<ThirdPersonPlayerController>();
             return player;
         }
@@ -150,6 +157,23 @@ namespace WildsOfDracoria.EditorTools
             CreateNPC("Village Smith", new Vector3(-7.2f, 1f, 2.5f), materials.npc);
         }
 
+        private static void CreateEnemies(SceneMaterials materials)
+        {
+            CreateWolf("Forest Wolf", new Vector3(12f, 0.8f, -8f), materials.wolf);
+            CreateWolf("Forest Wolf", new Vector3(15f, 0.8f, -3f), materials.wolf);
+        }
+
+        private static void CreateWolf(string name, Vector3 position, Material material)
+        {
+            var wolf = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            wolf.name = name;
+            wolf.transform.position = position;
+            wolf.transform.localScale = new Vector3(1.2f, 0.8f, 1.8f);
+            wolf.GetComponent<Renderer>().sharedMaterial = material;
+            wolf.AddComponent<EnemyHealth>();
+            wolf.AddComponent<EnemyAI>();
+        }
+
         private static void CreateNPC(string name, Vector3 position, Material material)
         {
             var npc = GameObject.CreatePrimitive(PrimitiveType.Capsule);
@@ -167,6 +191,19 @@ namespace WildsOfDracoria.EditorTools
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvasObject.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasObject.AddComponent<GraphicRaycaster>();
+
+            var combatUI = canvasObject.AddComponent<CombatUI>();
+            var healthSlider = CreateSlider(canvasObject.transform, "Health Bar", new Vector2(0f, 1f), new Vector2(18f, -22f), new Vector2(220f, 18f), new Color(0.72f, 0.08f, 0.08f));
+            var staminaSlider = CreateSlider(canvasObject.transform, "Stamina Bar", new Vector2(0f, 1f), new Vector2(18f, -46f), new Vector2(220f, 14f), new Color(0.14f, 0.65f, 0.2f));
+            var enemyPanel = CreatePanel(canvasObject.transform, "Enemy Target Panel", new Vector2(0.5f, 1f), new Vector2(-150f, -24f), new Vector2(300f, 54f));
+            var enemyNameText = CreateText(enemyPanel.transform, "Enemy Name", "Forest Wolf", 16, TextAnchor.UpperCenter);
+            var enemySlider = CreateSlider(enemyPanel.transform, "Enemy Health Bar", new Vector2(0.5f, 0f), new Vector2(-120f, 8f), new Vector2(240f, 14f), new Color(0.8f, 0.12f, 0.1f));
+            SetSerializedField(combatUI, "healthSlider", healthSlider);
+            SetSerializedField(combatUI, "staminaSlider", staminaSlider);
+            SetSerializedField(combatUI, "enemyPanel", enemyPanel);
+            SetSerializedField(combatUI, "enemyNameText", enemyNameText);
+            SetSerializedField(combatUI, "enemyHealthSlider", enemySlider);
+            enemyPanel.SetActive(false);
 
             var prompt = CreatePanel(canvasObject.transform, "Interaction Prompt", new Vector2(0.5f, 0f), new Vector2(0f, 72f), new Vector2(260f, 44f));
             var promptText = CreateText(prompt.transform, "Prompt Text", "E - Interact", 18, TextAnchor.MiddleCenter);
@@ -222,6 +259,51 @@ namespace WildsOfDracoria.EditorTools
             return uiText;
         }
 
+        private static Slider CreateSlider(Transform parent, string name, Vector2 anchor, Vector2 anchoredPosition, Vector2 size, Color fillColor)
+        {
+            var sliderObject = new GameObject(name);
+            sliderObject.transform.SetParent(parent, false);
+            var rect = sliderObject.AddComponent<RectTransform>();
+            rect.anchorMin = anchor;
+            rect.anchorMax = anchor;
+            rect.pivot = anchor;
+            rect.anchoredPosition = anchoredPosition;
+            rect.sizeDelta = size;
+
+            var background = new GameObject("Background");
+            background.transform.SetParent(sliderObject.transform, false);
+            var backgroundImage = background.AddComponent<Image>();
+            backgroundImage.color = new Color(0.02f, 0.02f, 0.02f, 0.85f);
+            Stretch(background.GetComponent<RectTransform>());
+
+            var fillArea = new GameObject("Fill Area");
+            fillArea.transform.SetParent(sliderObject.transform, false);
+            Stretch(fillArea.AddComponent<RectTransform>());
+
+            var fill = new GameObject("Fill");
+            fill.transform.SetParent(fillArea.transform, false);
+            var fillImage = fill.AddComponent<Image>();
+            fillImage.color = fillColor;
+            Stretch(fill.GetComponent<RectTransform>());
+
+            var slider = sliderObject.AddComponent<Slider>();
+            slider.transition = Selectable.Transition.None;
+            slider.targetGraphic = fillImage;
+            slider.fillRect = fill.GetComponent<RectTransform>();
+            slider.minValue = 0f;
+            slider.maxValue = 100f;
+            slider.value = 100f;
+            return slider;
+        }
+
+        private static void Stretch(RectTransform rect)
+        {
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+        }
+
         private static void CreateHouse(string name, Vector3 position, SceneMaterials materials)
         {
             CreateBox($"{name} Body", position + Vector3.up * 0.9f, new Vector3(4f, 1.8f, 3.5f), materials.stone);
@@ -267,6 +349,7 @@ namespace WildsOfDracoria.EditorTools
             public Material player;
             public Material npc;
             public Material tree;
+            public Material wolf;
         }
     }
 }
