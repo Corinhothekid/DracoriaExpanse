@@ -32,6 +32,7 @@ namespace WildsOfDracoria.Systems
 
             Instance = this;
             characterData = CharacterData.CreateDefault();
+            EnsureProfessionManager();
         }
 
         private void Start()
@@ -106,6 +107,16 @@ namespace WildsOfDracoria.Systems
         public void RegisterDialogueUI(DialogueUI ui)
         {
             dialogueUI = ui;
+        }
+
+        private void EnsureProfessionManager()
+        {
+            if (ProfessionManager.Instance != null || GetComponent<ProfessionManager>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<ProfessionManager>();
         }
 
         private void ApplyLoadedDataToPlayer()
