@@ -13,11 +13,15 @@ namespace WildsOfDracoria.UI
 
         private void Awake()
         {
-            GameManager.Instance?.RegisterInventoryUI(this);
             if (panel != null)
             {
                 panel.SetActive(false);
             }
+        }
+
+        private void Start()
+        {
+            GameManager.Instance?.RegisterInventoryUI(this);
         }
 
         public void Toggle()
