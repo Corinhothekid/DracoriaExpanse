@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WildsOfDracoria.Items;
 using WildsOfDracoria.Professions;
 
 namespace WildsOfDracoria.Data
@@ -32,6 +33,7 @@ namespace WildsOfDracoria.Data
             var data = new CharacterData();
             data.EnsureDefaultSkills();
             data.EnsureDefaultProfessions();
+            data.NormalizeInventory();
             return data;
         }
 
@@ -106,6 +108,20 @@ namespace WildsOfDracoria.Data
             }
         }
 
+        public void NormalizeInventory()
+        {
+            if (inventory == null)
+            {
+                inventory = new List<InventoryItem>();
+                return;
+            }
+
+            foreach (var item in inventory)
+            {
+                item.Normalize();
+            }
+        }
+
         public SkillData GetSkill(string skillName)
         {
             return skills.FirstOrDefault(skill => skill.skillName == skillName);
@@ -129,21 +145,22 @@ namespace WildsOfDracoria.Data
             return skill.GainXP(amount);
         }
 
-        public void AddInventoryItem(string itemName, int quantity = 1)
+        public void AddInventoryItem(string itemId, int quantity = 1)
         {
-            if (string.IsNullOrWhiteSpace(itemName) || quantity <= 0)
+            var normalizedId = ItemIds.Normalize(itemId);
+            if (string.IsNullOrWhiteSpace(normalizedId) || quantity <= 0 || !ItemDatabase.Exists(normalizedId))
             {
                 return;
             }
 
-            var existing = inventory.FirstOrDefault(item => item.itemName == itemName);
+            var existing = inventory.FirstOrDefault(item => ItemIds.Normalize(item.itemId) == normalizedId);
             if (existing != null)
             {
                 existing.quantity += quantity;
                 return;
             }
 
-            inventory.Add(new InventoryItem(itemName, quantity));
+            inventory.Add(new InventoryItem(normalizedId, quantity));
         }
 
         private void AddSkillIfMissing(string skillName)
