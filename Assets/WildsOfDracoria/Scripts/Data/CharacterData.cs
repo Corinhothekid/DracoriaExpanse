@@ -44,6 +44,7 @@ namespace WildsOfDracoria.Data
             data.EnsureDefaultSkills();
             data.EnsureDefaultProfessions();
             data.NormalizeInventory();
+            data.EnsureStarterGatheringTools();
             data.EnsureVisualProfile();
             return data;
         }
@@ -121,6 +122,7 @@ namespace WildsOfDracoria.Data
             }
 
             EnsureVisualProfile();
+            EnsureStarterGatheringTools();
 
             currentProfessionFocus = ProfessionIds.Normalize(currentProfessionFocus);
             if (string.IsNullOrWhiteSpace(currentProfessionFocus))
@@ -177,6 +179,14 @@ namespace WildsOfDracoria.Data
             }
 
             visualProfile.Normalize();
+        }
+
+        public void EnsureStarterGatheringTools()
+        {
+            if (!HasInventoryItem(ItemIds.BeginnerPickaxe, 1))
+            {
+                AddInventoryItem(ItemIds.BeginnerPickaxe, 1);
+            }
         }
 
         public SkillData GetSkill(string skillName)
