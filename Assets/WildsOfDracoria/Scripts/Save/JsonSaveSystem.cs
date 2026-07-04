@@ -32,6 +32,7 @@ namespace WildsOfDracoria.Save
             var json = File.ReadAllText(SavePath);
             var data = JsonUtility.FromJson<CharacterData>(json);
             data.EnsureDefaultSkills();
+            data.EnsureDefaultProfessions();
             return data;
         }
     }
