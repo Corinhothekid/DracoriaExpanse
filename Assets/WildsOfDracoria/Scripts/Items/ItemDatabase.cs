@@ -70,6 +70,7 @@ namespace WildsOfDracoria.Items
             Register(new ItemDefinition(ItemIds.CopperOre, "Copper Ore", "A starter ore for future mining and smithing.", ItemType.Ore, ItemRarity.Common, 99, 4, 0.7f, "icon_ore_copper", true, false, true));
             Register(new ItemDefinition(ItemIds.IronOre, "Iron Ore", "A useful ore for future blacksmithing.", ItemType.Ore, ItemRarity.Common, 99, 7, 0.9f, "icon_ore_iron", true, false, true));
             Register(new ItemDefinition(ItemIds.OakLog, "Oak Log", "A sturdy wood resource for future crafting and building.", ItemType.Wood, ItemRarity.Common, 99, 5, 1.0f, "icon_wood_oak", true, false, true));
+            Register(new ItemDefinition(ItemIds.Wheat, "Wheat", "A starter crop for future farming and cooking recipes.", ItemType.Food, ItemRarity.Common, 99, 2, 0.1f, "icon_crop_wheat", true, false, true));
             Register(new ItemDefinition(ItemIds.SimpleBread, "Simple Bread", "Plain travel bread for future cooking and survival loops.", ItemType.Food, ItemRarity.Common, 20, 2, 0.2f, "icon_food_bread", true, true, false));
             Register(new ItemDefinition(ItemIds.BasicFishingRod, "Basic Fishing Rod", "A beginner tool for future equipment-based fishing.", ItemType.Tool, ItemRarity.Common, 1, 10, 1.2f, "icon_tool_fishing_rod", true, false, false));
             Register(new ItemDefinition(ItemIds.BeginnerPickaxe, "Beginner Pickaxe", "A starter mining tool placeholder.", ItemType.Tool, ItemRarity.Common, 1, 10, 2.0f, "icon_tool_pickaxe", true, false, false));
