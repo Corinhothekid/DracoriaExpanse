@@ -13,13 +13,26 @@ namespace WildsOfDracoria.Combat
         public int maxQuantity = 1;
     }
 
+    public class RolledDrop
+    {
+        public string itemName;
+        public int quantity;
+
+        public RolledDrop(string itemName, int quantity)
+        {
+            this.itemName = itemName;
+            this.quantity = quantity;
+        }
+    }
+
     [Serializable]
     public class EnemyDropTable
     {
         public List<EnemyDrop> drops = new List<EnemyDrop>();
 
-        public IEnumerable<(string itemName, int quantity)> RollDrops()
+        public List<RolledDrop> RollDrops()
         {
+            var rolledDrops = new List<RolledDrop>();
             foreach (var drop in drops)
             {
                 if (drop == null || string.IsNullOrWhiteSpace(drop.itemName))
@@ -33,8 +46,10 @@ namespace WildsOfDracoria.Combat
                 }
 
                 var quantity = UnityEngine.Random.Range(drop.minQuantity, drop.maxQuantity + 1);
-                yield return (drop.itemName, Mathf.Max(1, quantity));
+                rolledDrops.Add(new RolledDrop(drop.itemName, Mathf.Max(1, quantity)));
             }
+
+            return rolledDrops;
         }
     }
 }
