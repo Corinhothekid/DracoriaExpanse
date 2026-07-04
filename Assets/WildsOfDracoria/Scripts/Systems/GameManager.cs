@@ -3,6 +3,7 @@ using WildsOfDracoria.Combat;
 using WildsOfDracoria.Data;
 using WildsOfDracoria.Save;
 using WildsOfDracoria.UI;
+using WildsOfDracoria.UI.Mobile;
 
 namespace WildsOfDracoria.Systems
 {
@@ -65,6 +66,7 @@ namespace WildsOfDracoria.Systems
         public void GainSkillXP(string skillName, int amount)
         {
             var leveledUp = characterData.GainSkillXP(skillName, amount);
+            NotificationPopupUI.Instance?.Show($"+{amount} {skillName} XP");
             if (leveledUp)
             {
                 dialogueUI?.ShowLine($"{skillName} increased to level {characterData.GetSkill(skillName).level}!");
