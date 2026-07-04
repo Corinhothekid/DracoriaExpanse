@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace WildsOfDracoria.Crafting
         [SerializeField] private CraftingUI craftingUI;
 
         private readonly Dictionary<string, RecipeDefinition> recipes = new Dictionary<string, RecipeDefinition>();
+        private bool isCrafting;
 
         private void Awake()
         {
@@ -95,6 +97,12 @@ namespace WildsOfDracoria.Crafting
                 return false;
             }
 
+            if (isCrafting)
+            {
+                warning = "Already crafting.";
+                return false;
+            }
+
             if (data == null)
             {
                 warning = "Character data is not ready.";
@@ -149,21 +157,41 @@ namespace WildsOfDracoria.Crafting
                 return false;
             }
 
+            StartCoroutine(CraftRoutine(recipe));
+            return true;
+        }
+
+        private IEnumerator CraftRoutine(RecipeDefinition recipe)
+        {
+            isCrafting = true;
+            craftingUI?.RefreshSelectedRecipe();
+
             var data = GetCharacterData();
             foreach (var input in recipe.inputItems)
             {
                 data.RemoveInventoryItem(input.itemId, input.quantity);
             }
 
-            foreach (var output in recipe.outputItems)
+            Notify($"Crafting {recipe.displayName}...");
+            yield return new WaitForSeconds(Mathf.Max(0f, recipe.craftingTimeSeconds));
+
+            if (Random.value <= Mathf.Clamp01(recipe.successChance))
             {
-                GameManager.Instance.AddItem(output.itemId, output.quantity);
+                foreach (var output in recipe.outputItems)
+                {
+                    GameManager.Instance.AddItem(output.itemId, output.quantity);
+                }
+
+                ProfessionManager.Instance?.AddXP(recipe.requiredProfessionId, recipe.xpReward, $"Crafted {recipe.displayName}.");
+                Notify($"Crafted {recipe.displayName}");
+            }
+            else
+            {
+                Notify($"Failed to craft {recipe.displayName}");
             }
 
-            ProfessionManager.Instance?.AddXP(recipe.requiredProfessionId, recipe.xpReward, $"Crafted {recipe.displayName}.");
-            Notify($"Crafted {recipe.displayName}");
+            isCrafting = false;
             craftingUI?.RefreshSelectedRecipe();
-            return true;
         }
 
         private CharacterData GetCharacterData()
