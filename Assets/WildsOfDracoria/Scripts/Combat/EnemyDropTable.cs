@@ -1,26 +1,34 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using WildsOfDracoria.Items;
 
 namespace WildsOfDracoria.Combat
 {
     [Serializable]
     public class EnemyDrop
     {
-        public string itemName;
+        [FormerlySerializedAs("itemName")]
+        public string itemId;
         [Range(0f, 1f)] public float dropChance = 0.5f;
         public int minQuantity = 1;
         public int maxQuantity = 1;
+
+        public void Normalize()
+        {
+            itemId = ItemIds.Normalize(itemId);
+        }
     }
 
     public class RolledDrop
     {
-        public string itemName;
+        public string itemId;
         public int quantity;
 
-        public RolledDrop(string itemName, int quantity)
+        public RolledDrop(string itemId, int quantity)
         {
-            this.itemName = itemName;
+            this.itemId = ItemIds.Normalize(itemId);
             this.quantity = quantity;
         }
     }
@@ -35,7 +43,13 @@ namespace WildsOfDracoria.Combat
             var rolledDrops = new List<RolledDrop>();
             foreach (var drop in drops)
             {
-                if (drop == null || string.IsNullOrWhiteSpace(drop.itemName))
+                if (drop == null)
+                {
+                    continue;
+                }
+
+                drop.Normalize();
+                if (string.IsNullOrWhiteSpace(drop.itemId) || !ItemDatabase.Exists(drop.itemId))
                 {
                     continue;
                 }
@@ -46,7 +60,7 @@ namespace WildsOfDracoria.Combat
                 }
 
                 var quantity = UnityEngine.Random.Range(drop.minQuantity, drop.maxQuantity + 1);
-                rolledDrops.Add(new RolledDrop(drop.itemName, Mathf.Max(1, quantity)));
+                rolledDrops.Add(new RolledDrop(drop.itemId, Mathf.Max(1, quantity)));
             }
 
             return rolledDrops;
