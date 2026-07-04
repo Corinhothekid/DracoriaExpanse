@@ -73,7 +73,8 @@ namespace WildsOfDracoria.Data
             facialHairStyle = CleanName(creationData.facialHairStyle, "None");
             eyeColor = CleanName(creationData.eyeColor, "Hazel");
             startingHomeland = CleanName(creationData.startingHomeland, raceDefinition.homelandName);
-            visualProfile = BuildVisualProfileFromLegacyFields(creationData.race);
+            visualProfile = creationData.visualProfile ?? BuildVisualProfileFromLegacyFields(creationData.race);
+            visualProfile.Normalize();
         }
 
         public void EnsureDefaultSkills()
