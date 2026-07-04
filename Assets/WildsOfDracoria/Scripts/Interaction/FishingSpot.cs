@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using WildsOfDracoria.Player;
+using WildsOfDracoria.Professions;
 using WildsOfDracoria.Systems;
 
 namespace WildsOfDracoria.Interaction
@@ -40,6 +41,7 @@ namespace WildsOfDracoria.Interaction
             var caughtItem = catchTable[Random.Range(0, catchTable.Length)];
             GameManager.Instance.AddItem(caughtItem);
             GameManager.Instance.GainSkillXP("Fishing", fishingXPReward);
+            ProfessionManager.Instance?.GainProfessionXP("Fishing", fishingXPReward, $"Caught {caughtItem} at Ironhaven.");
             GameManager.Instance.DialogueUI?.ShowLine($"You caught: {caughtItem}");
 
             isFishing = false;
