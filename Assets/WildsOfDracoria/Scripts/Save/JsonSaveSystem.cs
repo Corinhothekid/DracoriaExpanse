@@ -17,6 +17,7 @@ namespace WildsOfDracoria.Save
                 return;
             }
 
+            characterData.NormalizeInventory();
             var json = JsonUtility.ToJson(characterData, true);
             File.WriteAllText(SavePath, json);
             Debug.Log($"Saved Wilds of Dracoria character to {SavePath}");
@@ -33,6 +34,7 @@ namespace WildsOfDracoria.Save
             var data = JsonUtility.FromJson<CharacterData>(json);
             data.EnsureDefaultSkills();
             data.EnsureDefaultProfessions();
+            data.NormalizeInventory();
             return data;
         }
     }
