@@ -49,17 +49,17 @@ Mobile UI checks in Play Mode:
 Profession framework checks:
 
 - Open the profession list with SKL.
-- Confirm Fishing, Mining, Blacksmithing, Cooking, Farming, Logging, Merchant, Navigator, Shipwright, Carpenter, and Hunter all appear.
+- Confirm Fishing, Mining, Blacksmithing, Cooking, Sailing, Merchanting, Logging, Farming, Hunting, and Navigation all appear.
 - Confirm locked professions still appear.
 - Interact with the fishing spot and confirm Fishing Profession XP popup appears.
 - Save with F5 and load with F9, then reopen the profession list and confirm Fishing profession progress remains.
 
 ## System 004 Connections
 
-- `ProfessionData` stores saveable profession state.
+- `ProfessionData` stores saveable profession state: id, display name, description, level, XP, mastery, reputation, unlocks, and journal entries.
 - `ProfessionDefinition` describes registry entries.
 - `ProfessionRegistry` lists current and future professions.
-- `ProfessionManager` initializes profession data, grants XP, unlocks professions, refreshes UI, and uses existing notification popups.
+- `ProfessionManager` initializes profession data, grants XP, unlocks professions, fires events, refreshes UI, and uses existing notification popups.
 - `ProfessionUI` displays every profession, including locked professions.
 - `CharacterData` owns the saved profession list.
 - `JsonSaveSystem` persists professions through the existing local JSON save.
@@ -68,4 +68,4 @@ Profession framework checks:
 
 ## Current Prototype Boundaries
 
-System 004 intentionally does not add quests, networking, cities, sailing, economy systems, or full profession gameplay loops. It only creates reusable profession architecture and migrates the existing Fishing XP path into it.
+System 004 intentionally does not add quests, networking, cities, sailing, economy systems, gathering gameplay, crafting gameplay, or full profession gameplay loops. It only creates reusable profession architecture and migrates the existing Fishing XP path into it.
