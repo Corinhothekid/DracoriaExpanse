@@ -214,6 +214,11 @@ namespace WildsOfDracoria.Data
 
         public int GetInventoryQuantity(string itemId)
         {
+            if (inventory == null)
+            {
+                return 0;
+            }
+
             var normalizedId = ItemIds.Normalize(itemId);
             var existing = inventory.FirstOrDefault(item => ItemIds.Normalize(item.itemId) == normalizedId);
             return existing != null ? existing.quantity : 0;
@@ -232,6 +237,11 @@ namespace WildsOfDracoria.Data
                 return;
             }
 
+            if (inventory == null)
+            {
+                inventory = new List<InventoryItem>();
+            }
+
             var existing = inventory.FirstOrDefault(item => ItemIds.Normalize(item.itemId) == normalizedId);
             if (existing != null)
             {
@@ -244,6 +254,11 @@ namespace WildsOfDracoria.Data
 
         public bool RemoveInventoryItem(string itemId, int quantity = 1)
         {
+            if (inventory == null)
+            {
+                return false;
+            }
+
             var normalizedId = ItemIds.Normalize(itemId);
             if (string.IsNullOrWhiteSpace(normalizedId) || quantity <= 0)
             {
