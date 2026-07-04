@@ -1,22 +1,18 @@
-using System.Collections.Generic;
-
 namespace WildsOfDracoria.Professions
 {
     public class ProfessionDefinition
     {
-        public string professionName;
-        public bool startsUnlocked;
-        public string family;
+        public string professionId;
+        public string displayName;
         public string description;
-        public List<string> defaultUnlocks = new List<string>();
-        public List<string> defaultBonuses = new List<string>();
+        public bool startsUnlocked;
 
-        public ProfessionDefinition(string professionName, bool startsUnlocked, string family, string description)
+        public ProfessionDefinition(string professionId, string displayName, string description, bool startsUnlocked)
         {
-            this.professionName = professionName;
-            this.startsUnlocked = startsUnlocked;
-            this.family = family;
+            this.professionId = ProfessionIds.Normalize(professionId);
+            this.displayName = displayName;
             this.description = description;
+            this.startsUnlocked = startsUnlocked;
         }
     }
 }
