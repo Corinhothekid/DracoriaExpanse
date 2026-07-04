@@ -1,8 +1,8 @@
-# Wilds of Dracoria Game Bible
+# Dracoria Expanse Game Bible
 
 ## Working Title
 
-**Wilds of Dracoria**
+**Dracoria Expanse**
 
 ## Genre
 
