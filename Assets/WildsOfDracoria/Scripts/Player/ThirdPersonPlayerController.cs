@@ -112,8 +112,8 @@ namespace WildsOfDracoria.Player
             verticalVelocity += gravity * Time.deltaTime;
 
             var wantsToSprint = runInput && moveDirection.sqrMagnitude > 0.001f;
-            var canSprint = vitals == null || vitals.TrySpendStamina(sprintStaminaCostPerSecond * Time.deltaTime);
-            var speed = wantsToSprint && canSprint ? runSpeed : walkSpeed;
+            var canSprint = wantsToSprint && (vitals == null || vitals.TrySpendStamina(sprintStaminaCostPerSecond * Time.deltaTime));
+            var speed = canSprint ? runSpeed : walkSpeed;
             var velocity = (moveDirection * speed) + (Vector3.up * verticalVelocity);
             characterController.Move(velocity * Time.deltaTime);
         }
