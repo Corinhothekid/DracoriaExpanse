@@ -1,6 +1,7 @@
 using UnityEngine;
 using WildsOfDracoria.Combat;
 using WildsOfDracoria.Data;
+using WildsOfDracoria.Professions;
 using WildsOfDracoria.Save;
 using WildsOfDracoria.UI;
 using WildsOfDracoria.UI.Mobile;
@@ -36,6 +37,7 @@ namespace WildsOfDracoria.Systems
         private void Start()
         {
             FindUIIfNeeded();
+            ProfessionManager.Instance?.RefreshFromCharacterData();
             RefreshInventoryUI();
         }
 
@@ -89,6 +91,7 @@ namespace WildsOfDracoria.Systems
             }
 
             characterData = loaded;
+            ProfessionManager.Instance?.RefreshFromCharacterData();
             ApplyLoadedDataToPlayer();
             RefreshInventoryUI();
             dialogueUI?.ShowLine("Progress loaded.");
