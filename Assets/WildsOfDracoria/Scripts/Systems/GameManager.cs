@@ -38,6 +38,7 @@ namespace WildsOfDracoria.Systems
             characterData.NormalizeInventory();
             EnsureProfessionManager();
             EnsureCraftingManager();
+            EnsureCharacterCreationStartup();
         }
 
         private void Start()
@@ -163,6 +164,16 @@ namespace WildsOfDracoria.Systems
             }
 
             gameObject.AddComponent<CraftingManager>();
+        }
+
+        private void EnsureCharacterCreationStartup()
+        {
+            if (GetComponent<CharacterCreationStartup>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<CharacterCreationStartup>();
         }
 
         private void ApplyLoadedDataToPlayer()
