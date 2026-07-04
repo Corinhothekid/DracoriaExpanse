@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WildsOfDracoria.Professions;
 
 namespace WildsOfDracoria.Data
 {
@@ -23,12 +24,14 @@ namespace WildsOfDracoria.Data
         public string currentProfessionFocus = "Fishing";
         public string equippedWeapon = "Training Sword";
         public List<SkillData> skills = new List<SkillData>();
+        public List<ProfessionData> professions = new List<ProfessionData>();
         public List<InventoryItem> inventory = new List<InventoryItem>();
 
         public static CharacterData CreateDefault()
         {
             var data = new CharacterData();
             data.EnsureDefaultSkills();
+            data.EnsureDefaultProfessions();
             return data;
         }
 
@@ -71,9 +74,35 @@ namespace WildsOfDracoria.Data
             }
         }
 
+        public void EnsureDefaultProfessions()
+        {
+            if (professions == null)
+            {
+                professions = new List<ProfessionData>();
+            }
+
+            foreach (var definition in ProfessionRegistry.All)
+            {
+                var existing = GetProfession(definition.professionName);
+                if (existing == null)
+                {
+                    professions.Add(new ProfessionData(definition.professionName, definition.startsUnlocked));
+                }
+                else if (definition.startsUnlocked)
+                {
+                    existing.isUnlocked = true;
+                }
+            }
+        }
+
         public SkillData GetSkill(string skillName)
         {
             return skills.FirstOrDefault(skill => skill.skillName == skillName);
+        }
+
+        public ProfessionData GetProfession(string professionName)
+        {
+            return professions?.FirstOrDefault(profession => profession.professionName == professionName);
         }
 
         public bool GainSkillXP(string skillName, int amount)
