@@ -1,6 +1,7 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using WildsOfDracoria.Visuals;
 
 namespace WildsOfDracoria.CharacterCreation
 {
@@ -24,6 +25,7 @@ namespace WildsOfDracoria.CharacterCreation
         [SerializeField] private Text optionCLabel;
         [SerializeField] private Renderer previewRenderer;
         [SerializeField] private Transform previewTransform;
+        [SerializeField] private CharacterVisualManager previewVisualManager;
 
         private readonly CharacterCreationData creationData = new CharacterCreationData();
         private CharacterCreationStartup startup;
@@ -65,9 +67,16 @@ namespace WildsOfDracoria.CharacterCreation
             optionCLabel = optionCText;
             previewRenderer = preview;
             previewTransform = previewRoot;
+            previewVisualManager = previewRoot != null ? previewRoot.GetComponent<CharacterVisualManager>() : null;
             listenersBound = false;
             BindListeners();
             Close();
+        }
+
+        public void SetPreviewVisualManager(CharacterVisualManager manager)
+        {
+            previewVisualManager = manager;
+            RefreshVisualPreview();
         }
 
         public void Open(CharacterCreationStartup startupController)
@@ -77,133 +86,66 @@ namespace WildsOfDracoria.CharacterCreation
             ApplyRaceSelection();
             ApplyAppearanceSelection();
             ApplyHomelandSelection();
-
-            if (panel != null)
-            {
-                panel.SetActive(true);
-            }
-
+            if (panel != null) panel.SetActive(true);
             Refresh();
         }
 
         public void Close()
         {
-            if (panel != null)
-            {
-                panel.SetActive(false);
-            }
+            if (panel != null) panel.SetActive(false);
         }
 
         private void BindListeners()
         {
-            if (listenersBound)
-            {
-                return;
-            }
-
+            if (listenersBound) return;
             if (previousButton != null) previousButton.onClick.AddListener(PreviousStep);
             if (nextButton != null) nextButton.onClick.AddListener(NextStep);
             if (optionAButton != null) optionAButton.onClick.AddListener(PreviousOption);
             if (optionBButton != null) optionBButton.onClick.AddListener(NextOption);
             if (optionCButton != null) optionCButton.onClick.AddListener(UseSuggestedOption);
             if (confirmButton != null) confirmButton.onClick.AddListener(Confirm);
-
             if (characterNameInput != null)
             {
                 characterNameInput.text = creationData.characterName;
-                characterNameInput.onValueChanged.AddListener(value =>
-                {
-                    creationData.characterName = value;
-                    RefreshNamePreview();
-                });
+                characterNameInput.onValueChanged.AddListener(value => { creationData.characterName = value; RefreshNamePreview(); });
             }
-
             if (familyNameInput != null)
             {
                 familyNameInput.text = creationData.familyName;
-                familyNameInput.onValueChanged.AddListener(value =>
-                {
-                    creationData.familyName = value;
-                    RefreshNamePreview();
-                });
+                familyNameInput.onValueChanged.AddListener(value => { creationData.familyName = value; RefreshNamePreview(); });
             }
-
             listenersBound = true;
         }
 
-        private void NextStep()
-        {
-            CaptureNameInputs();
-            stepIndex = Mathf.Min(StepConfirm, stepIndex + 1);
-            Refresh();
-        }
-
-        private void PreviousStep()
-        {
-            CaptureNameInputs();
-            stepIndex = Mathf.Max(StepRace, stepIndex - 1);
-            Refresh();
-        }
+        private void NextStep() { CaptureNameInputs(); stepIndex = Mathf.Min(StepConfirm, stepIndex + 1); Refresh(); }
+        private void PreviousStep() { CaptureNameInputs(); stepIndex = Mathf.Max(StepRace, stepIndex - 1); Refresh(); }
 
         private void PreviousOption()
         {
-            switch (stepIndex)
-            {
-                case StepRace:
-                    raceIndex = WrapIndex(raceIndex - 1, RaceRegistry.All.Count);
-                    ApplyRaceSelection();
-                    break;
-                case StepAppearance:
-                    appearanceIndex = WrapIndex(appearanceIndex - 1, CharacterAppearanceOptions.All.Count);
-                    ApplyAppearanceSelection();
-                    break;
-                case StepHomeland:
-                    homelandIndex = WrapIndex(homelandIndex - 1, HomelandRegistry.All.Count);
-                    ApplyHomelandSelection();
-                    break;
-            }
-
+            if (stepIndex == StepRace) { raceIndex = WrapIndex(raceIndex - 1, RaceRegistry.All.Count); ApplyRaceSelection(); }
+            if (stepIndex == StepAppearance) { appearanceIndex = WrapIndex(appearanceIndex - 1, CharacterAppearanceOptions.All.Count); ApplyAppearanceSelection(); }
+            if (stepIndex == StepHomeland) { homelandIndex = WrapIndex(homelandIndex - 1, HomelandRegistry.All.Count); ApplyHomelandSelection(); }
             Refresh();
         }
 
         private void NextOption()
         {
-            switch (stepIndex)
-            {
-                case StepRace:
-                    raceIndex = WrapIndex(raceIndex + 1, RaceRegistry.All.Count);
-                    ApplyRaceSelection();
-                    break;
-                case StepAppearance:
-                    appearanceIndex = WrapIndex(appearanceIndex + 1, CharacterAppearanceOptions.All.Count);
-                    ApplyAppearanceSelection();
-                    break;
-                case StepHomeland:
-                    homelandIndex = WrapIndex(homelandIndex + 1, HomelandRegistry.All.Count);
-                    ApplyHomelandSelection();
-                    break;
-            }
-
+            if (stepIndex == StepRace) { raceIndex = WrapIndex(raceIndex + 1, RaceRegistry.All.Count); ApplyRaceSelection(); }
+            if (stepIndex == StepAppearance) { appearanceIndex = WrapIndex(appearanceIndex + 1, CharacterAppearanceOptions.All.Count); ApplyAppearanceSelection(); }
+            if (stepIndex == StepHomeland) { homelandIndex = WrapIndex(homelandIndex + 1, HomelandRegistry.All.Count); ApplyHomelandSelection(); }
             Refresh();
         }
 
         private void UseSuggestedOption()
         {
-            if (stepIndex == StepHomeland)
+            if (stepIndex != StepHomeland) return;
+            var race = RaceRegistry.Get(creationData.race);
+            for (var i = 0; i < HomelandRegistry.All.Count; i++)
             {
-                var race = RaceRegistry.Get(creationData.race);
-                for (var i = 0; i < HomelandRegistry.All.Count; i++)
-                {
-                    if (HomelandRegistry.All[i] == race.homelandName)
-                    {
-                        homelandIndex = i;
-                        break;
-                    }
-                }
-
-                ApplyHomelandSelection();
-                Refresh();
+                if (HomelandRegistry.All[i] == race.homelandName) homelandIndex = i;
             }
+            ApplyHomelandSelection();
+            Refresh();
         }
 
         private void Confirm()
@@ -219,19 +161,13 @@ namespace WildsOfDracoria.CharacterCreation
             if (confirmButton != null) confirmButton.gameObject.SetActive(stepIndex == StepConfirm);
             if (characterNameInput != null) characterNameInput.gameObject.SetActive(stepIndex == StepNames);
             if (familyNameInput != null) familyNameInput.gameObject.SetActive(stepIndex == StepNames);
+            SetOptionButtonsVisible(stepIndex == StepRace || stepIndex == StepAppearance || stepIndex == StepHomeland);
 
-            var optionsVisible = stepIndex == StepRace || stepIndex == StepAppearance || stepIndex == StepHomeland;
-            SetOptionButtonsVisible(optionsVisible);
-
-            switch (stepIndex)
-            {
-                case StepRace: RefreshRaceStep(); break;
-                case StepNames: RefreshNamesStep(); break;
-                case StepAppearance: RefreshAppearanceStep(); break;
-                case StepHomeland: RefreshHomelandStep(); break;
-                case StepConfirm: RefreshConfirmStep(); break;
-            }
-
+            if (stepIndex == StepRace) RefreshRaceStep();
+            if (stepIndex == StepNames) RefreshNamesStep();
+            if (stepIndex == StepAppearance) RefreshAppearanceStep();
+            if (stepIndex == StepHomeland) RefreshHomelandStep();
+            if (stepIndex == StepConfirm) RefreshConfirmStep();
             RefreshNamePreview();
         }
 
@@ -257,7 +193,7 @@ namespace WildsOfDracoria.CharacterCreation
             var preset = CharacterAppearanceOptions.All[appearanceIndex];
             SetStepTitle("Step 3: Basic Appearance");
             SetPrimary($"{preset.bodyType} Build");
-            SetSecondary($"Skin: {preset.skinTone}\nHair: {preset.hairStyle}, {preset.hairColor}\nFacial Hair: {preset.facialHairStyle}\nEyes: {preset.eyeColor}");
+            SetSecondary($"Skin: {preset.skinTone}\nHair: {preset.hairStyle}, {preset.hairColor}\nFacial Hair: {preset.facialHairStyle}\nEyes: {preset.eyeColor}\nFace: {BuildPreviewProfile().faceId}");
             SetOptionLabels("Previous Look", "Next Look", "");
             if (optionCButton != null) optionCButton.gameObject.SetActive(false);
         }
@@ -283,7 +219,6 @@ namespace WildsOfDracoria.CharacterCreation
             builder.AppendLine($"Hair: {creationData.hairStyle}, {creationData.hairColor}");
             builder.AppendLine($"Facial Hair: {creationData.facialHairStyle}");
             builder.AppendLine($"Eyes: {creationData.eyeColor}");
-
             SetStepTitle("Step 5: Confirm Character");
             SetPrimary("Ready to enter Ironhaven.");
             SetSecondary(builder.ToString());
@@ -294,7 +229,9 @@ namespace WildsOfDracoria.CharacterCreation
             var race = RaceRegistry.All[raceIndex];
             creationData.race = race.raceId;
             creationData.startingHomeland = race.homelandName;
-            ApplyPreview(race);
+            if (previewRenderer != null) previewRenderer.material.color = race.previewColor;
+            if (previewTransform != null) previewTransform.localScale = race.previewScale;
+            RefreshVisualPreview();
         }
 
         private void ApplyAppearanceSelection()
@@ -306,17 +243,32 @@ namespace WildsOfDracoria.CharacterCreation
             creationData.hairColor = preset.hairColor;
             creationData.facialHairStyle = preset.facialHairStyle;
             creationData.eyeColor = preset.eyeColor;
+            RefreshVisualPreview();
         }
 
-        private void ApplyHomelandSelection()
+        private void ApplyHomelandSelection() { creationData.startingHomeland = HomelandRegistry.All[homelandIndex]; }
+
+        private void RefreshVisualPreview()
         {
-            creationData.startingHomeland = HomelandRegistry.All[homelandIndex];
+            if (previewVisualManager != null) previewVisualManager.RefreshPreview(BuildPreviewProfile());
         }
 
-        private void ApplyPreview(RaceDefinition race)
+        private CharacterVisualProfile BuildPreviewProfile()
         {
-            if (previewRenderer != null) previewRenderer.material.color = race.previewColor;
-            if (previewTransform != null) previewTransform.localScale = race.previewScale;
+            return new CharacterVisualProfile
+            {
+                race = creationData.race,
+                bodyType = NormalizeId(creationData.bodyType, "average"),
+                skinToneId = NormalizeId(creationData.skinTone, RaceVisualRegistry.Get(creationData.race).defaultSkinTone),
+                hairStyleId = MapHairStyle(creationData.hairStyle),
+                hairColorId = NormalizeId(creationData.hairColor, "brown"),
+                eyeColorId = NormalizeId(creationData.eyeColor, "hazel"),
+                faceId = appearanceIndex % 3 == 0 ? "face_soft" : appearanceIndex % 3 == 1 ? "face_sharp" : "face_bold",
+                facialHairId = MapFacialHair(creationData.facialHairStyle),
+                outfitId = appearanceIndex % 3 == 0 ? "outfit_traveler" : appearanceIndex % 3 == 1 ? "outfit_worker" : "outfit_adventurer",
+                capeId = appearanceIndex == 3 ? "cape_starter" : "cape_none",
+                weaponVisualId = "weapon_training_sword"
+            };
         }
 
         private void CaptureNameInputs()
@@ -327,10 +279,7 @@ namespace WildsOfDracoria.CharacterCreation
 
         private void RefreshNamePreview()
         {
-            if (finalNameText != null)
-            {
-                finalNameText.text = $"{creationData.FullName}\n{creationData.HouseName}";
-            }
+            if (finalNameText != null) finalNameText.text = $"{creationData.FullName}\n{creationData.HouseName}";
         }
 
         private void SetOptionButtonsVisible(bool visible)
@@ -347,20 +296,9 @@ namespace WildsOfDracoria.CharacterCreation
             if (optionCLabel != null) optionCLabel.text = c;
         }
 
-        private void SetStepTitle(string text)
-        {
-            if (stepTitleText != null) stepTitleText.text = text;
-        }
-
-        private void SetPrimary(string text)
-        {
-            if (primaryText != null) primaryText.text = text;
-        }
-
-        private void SetSecondary(string text)
-        {
-            if (secondaryText != null) secondaryText.text = text;
-        }
+        private void SetStepTitle(string text) { if (stepTitleText != null) stepTitleText.text = text; }
+        private void SetPrimary(string text) { if (primaryText != null) primaryText.text = text; }
+        private void SetSecondary(string text) { if (secondaryText != null) secondaryText.text = text; }
 
         private static int WrapIndex(int value, int count)
         {
@@ -368,6 +306,33 @@ namespace WildsOfDracoria.CharacterCreation
             if (value < 0) return count - 1;
             if (value >= count) return 0;
             return value;
+        }
+
+        private static string NormalizeId(string value, string fallback)
+        {
+            return string.IsNullOrWhiteSpace(value) ? fallback : value.Trim().ToLowerInvariant().Replace(" ", "_");
+        }
+
+        private static string MapHairStyle(string value)
+        {
+            switch (NormalizeId(value, "short"))
+            {
+                case "long": return "hair_long";
+                case "braided":
+                case "spiky": return "hair_spiky";
+                case "shaved": return "hair_none";
+                default: return "hair_short";
+            }
+        }
+
+        private static string MapFacialHair(string value)
+        {
+            switch (NormalizeId(value, "none"))
+            {
+                case "trimmed": return "facial_trimmed";
+                case "full": return "facial_full";
+                default: return "facial_none";
+            }
         }
     }
 }
