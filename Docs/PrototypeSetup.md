@@ -2,7 +2,7 @@
 
 ## Goal
 
-Build the first playable slice of Wilds of Dracoria: a third-person player in Ironhaven with interaction, fishing, inventory, skills, NPC dialogue, local save/load, basic combat, Forest Wolf enemy AI, and mobile-friendly controls.
+Build the first playable slice of Wilds of Dracoria: a third-person player in Ironhaven with interaction, fishing, inventory, skills, NPC dialogue, local save/load, basic combat, Forest Wolf enemy AI, mobile-friendly controls, and the reusable profession framework.
 
 ## Create the Scene
 
@@ -10,9 +10,10 @@ Build the first playable slice of Wilds of Dracoria: a third-person player in Ir
 2. Create a new empty scene.
 3. Save it as `Assets/WildsOfDracoria/Scenes/IronhavenPrototype.unity`.
 4. From the Unity top menu, choose `Wilds of Dracoria > Build Ironhaven Prototype Scene`.
-5. Then choose `Wilds of Dracoria > Add Mobile Controls To Current Scene`.
-6. Save the scene again.
-7. Press Play.
+5. Choose `Wilds of Dracoria > Add Mobile Controls To Current Scene`.
+6. Choose `Wilds of Dracoria > Add Profession Framework To Current Scene`.
+7. Save the scene again.
+8. Press Play.
 
 ## Test Checklist
 
@@ -40,20 +41,31 @@ Mobile UI checks in Play Mode:
 - Hold BLK to block.
 - Tap DOD to dodge.
 - Tap INV to toggle inventory.
-- Tap SKL, MAP, and CHR to show placeholder notifications.
+- Tap SKL to toggle the profession list.
+- Tap MAP and CHR to show placeholder notifications.
 - Defeat a wolf and confirm XP popup notifications and possible inventory drops.
 - Verify the 6-slot action bar appears empty and reusable.
 
-## System 003 Connections
+Profession framework checks:
 
-- `VirtualJoystick` produces movement input.
-- `MobileControlsRouter` sends joystick/button state to existing player movement, combat, interact, and inventory scripts.
-- `MobileActionButton` maps UI button press/release/click events to router actions.
-- `CameraDragInput` sends drag deltas to `ThirdPersonCameraFollow`.
-- `ActionBarUI` owns six empty reusable slots.
-- `NotificationPopupUI` displays short menu and XP messages.
-- `MobileControlsSceneBuilder` creates the mobile UI in the current scene without changing gameplay systems.
+- Open the profession list with SKL.
+- Confirm Fishing, Mining, Blacksmithing, Cooking, Farming, Logging, Merchant, Navigator, Shipwright, Carpenter, and Hunter all appear.
+- Confirm locked professions still appear.
+- Interact with the fishing spot and confirm Fishing Profession XP popup appears.
+- Save with F5 and load with F9, then reopen the profession list and confirm Fishing profession progress remains.
+
+## System 004 Connections
+
+- `ProfessionData` stores saveable profession state.
+- `ProfessionDefinition` describes registry entries.
+- `ProfessionRegistry` lists current and future professions.
+- `ProfessionManager` initializes profession data, grants XP, unlocks professions, refreshes UI, and uses existing notification popups.
+- `ProfessionUI` displays every profession, including locked professions.
+- `CharacterData` owns the saved profession list.
+- `JsonSaveSystem` persists professions through the existing local JSON save.
+- `FishingSpot` now grants Fishing Profession XP without changing the fishing interaction loop.
+- `ProfessionFrameworkSceneBuilder` adds the profession UI to the current scene.
 
 ## Current Prototype Boundaries
 
-System 003 intentionally does not add quests, professions, networking, new combat abilities, new economy logic, or new gameplay loops. It only creates a mobile control and UI foundation for the existing prototype.
+System 004 intentionally does not add quests, networking, cities, sailing, economy systems, or full profession gameplay loops. It only creates reusable profession architecture and migrates the existing Fishing XP path into it.
