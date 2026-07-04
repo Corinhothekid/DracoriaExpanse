@@ -25,6 +25,16 @@ namespace WildsOfDracoria.UI
             GameManager.Instance?.RegisterCharacterSheetUI(this);
         }
 
+        public void Configure(GameObject panelObject, Text text)
+        {
+            panel = panelObject;
+            characterText = text;
+            if (panel != null)
+            {
+                panel.SetActive(false);
+            }
+        }
+
         public void Toggle()
         {
             if (panel == null)
