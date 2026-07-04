@@ -21,7 +21,7 @@ namespace WildsOfDracoria.Data
         public int maxStamina = 100;
         public int currentStamina = 100;
         public int gold = 25;
-        public string currentProfessionFocus = "Fishing";
+        public string currentProfessionFocus = ProfessionIds.Fishing;
         public string equippedWeapon = "Training Sword";
         public List<SkillData> skills = new List<SkillData>();
         public List<ProfessionData> professions = new List<ProfessionData>();
@@ -72,6 +72,12 @@ namespace WildsOfDracoria.Data
             {
                 equippedWeapon = "Training Sword";
             }
+
+            currentProfessionFocus = ProfessionIds.Normalize(currentProfessionFocus);
+            if (string.IsNullOrWhiteSpace(currentProfessionFocus))
+            {
+                currentProfessionFocus = ProfessionIds.Fishing;
+            }
         }
 
         public void EnsureDefaultProfessions()
@@ -81,16 +87,21 @@ namespace WildsOfDracoria.Data
                 professions = new List<ProfessionData>();
             }
 
+            foreach (var existing in professions)
+            {
+                existing.professionId = ProfessionIds.Normalize(existing.professionId);
+            }
+
             foreach (var definition in ProfessionRegistry.All)
             {
-                var existing = GetProfession(definition.professionName);
+                var existing = GetProfession(definition.professionId);
                 if (existing == null)
                 {
-                    professions.Add(new ProfessionData(definition.professionName, definition.startsUnlocked));
+                    professions.Add(new ProfessionData(definition.professionId, definition.displayName, definition.description, definition.startsUnlocked));
                 }
-                else if (definition.startsUnlocked)
+                else
                 {
-                    existing.isUnlocked = true;
+                    existing.ApplyDefinition(definition);
                 }
             }
         }
@@ -100,9 +111,10 @@ namespace WildsOfDracoria.Data
             return skills.FirstOrDefault(skill => skill.skillName == skillName);
         }
 
-        public ProfessionData GetProfession(string professionName)
+        public ProfessionData GetProfession(string professionId)
         {
-            return professions?.FirstOrDefault(profession => profession.professionName == professionName);
+            var normalizedId = ProfessionIds.Normalize(professionId);
+            return professions?.FirstOrDefault(profession => ProfessionIds.Normalize(profession.professionId) == normalizedId);
         }
 
         public bool GainSkillXP(string skillName, int amount)
