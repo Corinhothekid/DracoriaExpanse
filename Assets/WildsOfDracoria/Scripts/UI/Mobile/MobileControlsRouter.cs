@@ -13,6 +13,7 @@ namespace WildsOfDracoria.UI.Mobile
         [SerializeField] private PlayerCombat playerCombat;
         [SerializeField] private InventoryUI inventoryUI;
         [SerializeField] private ProfessionUI professionUI;
+        [SerializeField] private CharacterSheetUI characterSheetUI;
         [SerializeField] private NotificationPopupUI notificationPopupUI;
 
         private bool sprintHeld;
@@ -38,6 +39,11 @@ namespace WildsOfDracoria.UI.Mobile
             if (professionUI == null)
             {
                 professionUI = FindObjectOfType<ProfessionUI>(true);
+            }
+
+            if (characterSheetUI == null)
+            {
+                characterSheetUI = FindObjectOfType<CharacterSheetUI>(true);
             }
 
             if (notificationPopupUI == null)
@@ -111,7 +117,7 @@ namespace WildsOfDracoria.UI.Mobile
                     ShowPrototypeNotice("Map placeholder");
                     break;
                 case MobileControlAction.Character:
-                    ShowPrototypeNotice("Character panel placeholder");
+                    characterSheetUI?.Toggle();
                     break;
             }
         }
