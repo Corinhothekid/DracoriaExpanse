@@ -15,6 +15,7 @@ namespace WildsOfDracoria.Items
         public const string CopperOre = "copper_ore";
         public const string IronOre = "iron_ore";
         public const string OakLog = "oak_log";
+        public const string Wheat = "wheat";
         public const string SimpleBread = "simple_bread";
         public const string BasicFishingRod = "basic_fishing_rod";
         public const string BeginnerPickaxe = "beginner_pickaxe";
@@ -55,6 +56,8 @@ namespace WildsOfDracoria.Items
                 case IronOre: return IronOre;
                 case "oak log":
                 case OakLog: return OakLog;
+                case "wheat":
+                case Wheat: return Wheat;
                 case "simple bread":
                 case SimpleBread: return SimpleBread;
                 case "basic fishing rod":
