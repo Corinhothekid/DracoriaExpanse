@@ -21,8 +21,10 @@ namespace WildsOfDracoria.Player
 
         private CharacterController characterController;
         private Vector2 moveInput;
+        private Vector2 externalMoveInput;
         private float verticalVelocity;
         private bool runInput;
+        private bool externalRunInput;
         private bool jumpRequested;
 
         private void Awake()
@@ -45,12 +47,12 @@ namespace WildsOfDracoria.Player
 
         public void SetMoveInput(Vector2 input)
         {
-            moveInput = Vector2.ClampMagnitude(input, 1f);
+            externalMoveInput = Vector2.ClampMagnitude(input, 1f);
         }
 
         public void SetRunInput(bool isRunning)
         {
-            runInput = isRunning;
+            externalRunInput = isRunning;
         }
 
         public void Jump()
@@ -66,8 +68,8 @@ namespace WildsOfDracoria.Player
         private void ReadKeyboardInput()
         {
             var keyboardInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-            SetMoveInput(keyboardInput.sqrMagnitude > 0.001f ? keyboardInput : Vector2.zero);
-            SetRunInput(Input.GetKey(KeyCode.LeftShift));
+            moveInput = keyboardInput.sqrMagnitude > 0.001f ? Vector2.ClampMagnitude(keyboardInput, 1f) : externalMoveInput;
+            runInput = Input.GetKey(KeyCode.LeftShift) || externalRunInput;
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
