@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using WildsOfDracoria.Items;
 using WildsOfDracoria.Player;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.Systems;
@@ -13,10 +14,10 @@ namespace WildsOfDracoria.Interaction
 
         private readonly string[] catchTable =
         {
-            "Small Silverfin",
-            "River Trout",
-            "Old Boot",
-            "Rare Golden Carp"
+            ItemIds.SmallSilverfin,
+            ItemIds.RiverTrout,
+            ItemIds.OldBoot,
+            ItemIds.RareGoldenCarp
         };
 
         private bool isFishing;
@@ -38,10 +39,11 @@ namespace WildsOfDracoria.Interaction
 
             yield return new WaitForSeconds(catchTimeSeconds);
 
-            var caughtItem = catchTable[Random.Range(0, catchTable.Length)];
-            GameManager.Instance.AddItem(caughtItem);
-            ProfessionManager.Instance?.AddXP(ProfessionIds.Fishing, fishingXPReward, $"Caught {caughtItem} at Ironhaven.");
-            GameManager.Instance.DialogueUI?.ShowLine($"You caught: {caughtItem}");
+            var caughtItemId = catchTable[Random.Range(0, catchTable.Length)];
+            var caughtItemName = ItemDatabase.GetDisplayName(caughtItemId);
+            GameManager.Instance.AddItem(caughtItemId);
+            ProfessionManager.Instance?.AddXP(ProfessionIds.Fishing, fishingXPReward, $"Caught {caughtItemName} at Ironhaven.");
+            GameManager.Instance.DialogueUI?.ShowLine($"You caught: {caughtItemName}");
 
             isFishing = false;
         }
