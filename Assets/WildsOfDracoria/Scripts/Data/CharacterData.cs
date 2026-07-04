@@ -10,10 +10,18 @@ namespace WildsOfDracoria.Data
         public string characterName = "New Adventurer";
         public string familyName = "Drakeward";
         public string race = "Human";
+
+        // Kept for compatibility with the first prototype save shape.
         public int health = 100;
         public int stamina = 100;
+
+        public int maxHealth = 100;
+        public int currentHealth = 100;
+        public int maxStamina = 100;
+        public int currentStamina = 100;
         public int gold = 25;
         public string currentProfessionFocus = "Fishing";
+        public string equippedWeapon = "Training Sword";
         public List<SkillData> skills = new List<SkillData>();
         public List<InventoryItem> inventory = new List<InventoryItem>();
 
@@ -32,6 +40,35 @@ namespace WildsOfDracoria.Data
             AddSkillIfMissing("Cooking");
             AddSkillIfMissing("Sailing");
             AddSkillIfMissing("Swordsmanship");
+            AddSkillIfMissing("Endurance");
+
+            if (maxHealth <= 0)
+            {
+                maxHealth = 100;
+            }
+
+            if (maxStamina <= 0)
+            {
+                maxStamina = 100;
+            }
+
+            if (currentHealth <= 0 && health > 0)
+            {
+                currentHealth = health;
+            }
+
+            if (currentStamina <= 0 && stamina > 0)
+            {
+                currentStamina = stamina;
+            }
+
+            currentHealth = Math.Max(1, Math.Min(currentHealth, maxHealth));
+            currentStamina = Math.Max(0, Math.Min(currentStamina, maxStamina));
+
+            if (string.IsNullOrWhiteSpace(equippedWeapon))
+            {
+                equippedWeapon = "Training Sword";
+            }
         }
 
         public SkillData GetSkill(string skillName)
