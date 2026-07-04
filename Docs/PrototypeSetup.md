@@ -2,7 +2,7 @@
 
 ## Goal
 
-Build the first playable slice of Wilds of Dracoria: a third-person player in Ironhaven with interaction, fishing, inventory, skills, NPC dialogue, local save/load, basic combat, Forest Wolf enemy AI, mobile-friendly controls, and the reusable profession framework.
+Build the first playable slice of Dracoria Expanse: a third-person player in Ironhaven with interaction, fishing, inventory, skills, NPC dialogue, local save/load, basic combat, Forest Wolf enemy AI, mobile-friendly controls, the reusable profession framework, and a central item database.
 
 ## Create the Scene
 
@@ -54,6 +54,14 @@ Profession framework checks:
 - Interact with the fishing spot and confirm Fishing Profession XP popup appears.
 - Save with F5 and load with F9, then reopen the profession list and confirm Fishing profession progress remains.
 
+Item database checks:
+
+- Catch fish at the fishing spot and confirm the inventory shows display names such as Small Silverfin, River Trout, Old Boot, or Rare Golden Carp.
+- Defeat a Forest Wolf and confirm any drops display as Wolf Pelt, Raw Meat, or Small Fang.
+- Save with F5 and load with F9, then confirm inventory quantities remain.
+- Confirm old display-name saves still load by normalizing into item IDs.
+- Confirm no crafting, shops, or economy loops were added yet.
+
 ## System 004 Connections
 
 - `ProfessionData` stores saveable profession state: id, display name, description, level, XP, mastery, reputation, unlocks, and journal entries.
@@ -63,9 +71,21 @@ Profession framework checks:
 - `ProfessionUI` displays every profession, including locked professions.
 - `CharacterData` owns the saved profession list.
 - `JsonSaveSystem` persists professions through the existing local JSON save.
-- `FishingSpot` now grants Fishing Profession XP without changing the fishing interaction loop.
+- `FishingSpot` grants Fishing Profession XP without changing the fishing interaction loop.
 - `ProfessionFrameworkSceneBuilder` adds the profession UI to the current scene.
+
+## System 005 Connections
+
+- `ItemDefinition` describes each item with id, display name, description, type, rarity, stack limit, value, weight, icon placeholder, and gameplay flags.
+- `ItemType` and `ItemRarity` provide shared categories for inventory, loot, crafting, economy, and UI systems.
+- `ItemIds` stores stable constants and normalizes older display-name inventory saves into item IDs.
+- `ItemDatabase` registers all starter item definitions and provides lookup, validation, display name, stack limit, and type filtering helpers.
+- `InventoryItem` now stores `itemId` and `quantity`.
+- `InventoryUI` displays player-friendly names by looking up item IDs in `ItemDatabase`.
+- `FishingSpot` awards item IDs from the database instead of raw item names.
+- `EnemyDropTable` and `EnemyHealth` roll and award database item IDs for wolf drops.
+- `CharacterData`, `GameManager`, and `JsonSaveSystem` normalize inventory before adding, saving, or loading items.
 
 ## Current Prototype Boundaries
 
-System 004 intentionally does not add quests, networking, cities, sailing, economy systems, gathering gameplay, crafting gameplay, or full profession gameplay loops. It only creates reusable profession architecture and migrates the existing Fishing XP path into it.
+System 005 intentionally does not add quests, networking, cities, sailing, economy systems, shops, crafting gameplay, new gathering gameplay, or full profession gameplay loops. It only creates reusable item architecture and migrates the existing fishing and wolf drop rewards into it.
