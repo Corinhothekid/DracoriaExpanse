@@ -33,6 +33,7 @@ namespace WildsOfDracoria.Systems
 
         private void Start()
         {
+            FindUIIfNeeded();
             RefreshInventoryUI();
         }
 
@@ -98,6 +99,19 @@ namespace WildsOfDracoria.Systems
         public void RegisterDialogueUI(DialogueUI ui)
         {
             dialogueUI = ui;
+        }
+
+        private void FindUIIfNeeded()
+        {
+            if (inventoryUI == null)
+            {
+                inventoryUI = FindObjectOfType<InventoryUI>(true);
+            }
+
+            if (dialogueUI == null)
+            {
+                dialogueUI = FindObjectOfType<DialogueUI>(true);
+            }
         }
 
         private void RefreshInventoryUI()
