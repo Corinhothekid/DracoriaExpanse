@@ -1,34 +1,85 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace WildsOfDracoria.Professions
 {
     [Serializable]
     public class ProfessionData
     {
-        public string professionName;
+        [FormerlySerializedAs("professionName")]
+        public string professionId;
+        public string displayName;
+        public string description;
         public int level;
         public int currentXP;
-        public int xpRequired;
+        [FormerlySerializedAs("xpRequired")]
+        public int xpToNextLevel;
         public string masteryRank;
         public int reputation;
         public bool isUnlocked;
-        public List<string> unlocks = new List<string>();
-        public List<string> activeBonuses = new List<string>();
-        public List<string> professionJournal = new List<string>();
+        [FormerlySerializedAs("unlocks")]
+        public List<string> discoveredUnlocks = new List<string>();
+        [FormerlySerializedAs("professionJournal")]
+        public List<string> journalEntries = new List<string>();
 
-        public ProfessionData(string professionName, bool isUnlocked = false)
+        public ProfessionData(string professionId, string displayName, string description, bool isUnlocked = false)
         {
-            this.professionName = professionName;
+            this.professionId = ProfessionIds.Normalize(professionId);
+            this.displayName = displayName;
+            this.description = description;
             this.level = 1;
             this.currentXP = 0;
-            this.xpRequired = 100;
+            this.xpToNextLevel = 100;
             this.masteryRank = "Novice";
             this.reputation = 0;
             this.isUnlocked = isUnlocked;
         }
 
-        public bool GainXP(int amount)
+        public void ApplyDefinition(ProfessionDefinition definition)
+        {
+            professionId = ProfessionIds.Normalize(professionId);
+            if (definition == null)
+            {
+                return;
+            }
+
+            professionId = definition.professionId;
+            displayName = definition.displayName;
+            description = definition.description;
+
+            if (definition.startsUnlocked)
+            {
+                isUnlocked = true;
+            }
+
+            if (level <= 0)
+            {
+                level = 1;
+            }
+
+            if (xpToNextLevel <= 0)
+            {
+                xpToNextLevel = CalculateXPToNextLevel(level);
+            }
+
+            if (string.IsNullOrWhiteSpace(masteryRank))
+            {
+                masteryRank = CalculateMasteryRank(level);
+            }
+
+            if (discoveredUnlocks == null)
+            {
+                discoveredUnlocks = new List<string>();
+            }
+
+            if (journalEntries == null)
+            {
+                journalEntries = new List<string>();
+            }
+        }
+
+        public bool AddXP(int amount)
         {
             if (!isUnlocked || amount <= 0)
             {
@@ -38,11 +89,11 @@ namespace WildsOfDracoria.Professions
             var leveledUp = false;
             currentXP += amount;
 
-            while (currentXP >= xpRequired)
+            while (currentXP >= xpToNextLevel)
             {
-                currentXP -= xpRequired;
+                currentXP -= xpToNextLevel;
                 level++;
-                xpRequired = CalculateXPRequired(level);
+                xpToNextLevel = CalculateXPToNextLevel(level);
                 masteryRank = CalculateMasteryRank(level);
                 leveledUp = true;
             }
@@ -54,11 +105,19 @@ namespace WildsOfDracoria.Professions
         {
             if (!string.IsNullOrWhiteSpace(entry))
             {
-                professionJournal.Add(entry);
+                journalEntries.Add(entry);
             }
         }
 
-        public static int CalculateXPRequired(int level)
+        public void AddUnlock(string unlockId)
+        {
+            if (!string.IsNullOrWhiteSpace(unlockId) && !discoveredUnlocks.Contains(unlockId))
+            {
+                discoveredUnlocks.Add(unlockId);
+            }
+        }
+
+        public static int CalculateXPToNextLevel(int level)
         {
             return 100 + ((level - 1) * 50);
         }
