@@ -1,5 +1,6 @@
 using UnityEngine;
 using WildsOfDracoria.Combat;
+using WildsOfDracoria.Crafting;
 using WildsOfDracoria.Data;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.Save;
@@ -34,6 +35,7 @@ namespace WildsOfDracoria.Systems
             characterData = CharacterData.CreateDefault();
             characterData.NormalizeInventory();
             EnsureProfessionManager();
+            EnsureCraftingManager();
         }
 
         private void Start()
@@ -119,6 +121,16 @@ namespace WildsOfDracoria.Systems
             }
 
             gameObject.AddComponent<ProfessionManager>();
+        }
+
+        private void EnsureCraftingManager()
+        {
+            if (CraftingManager.Instance != null || GetComponent<CraftingManager>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<CraftingManager>();
         }
 
         private void ApplyLoadedDataToPlayer()
