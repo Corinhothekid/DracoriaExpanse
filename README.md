@@ -3,7 +3,27 @@
 Mobile-first fantasy MMO prototype foundation built for Unity.
 
 Working title: **Wilds of Dracoria**  
-Repository name: **DracoriaExpanse**
+Repository name: **DracoriaExpanse**  
+Style target: **Classic WoW-inspired stylized fantasy**, with RuneScape-like life skills and long-term player identity.
+
+## Core Pitch
+
+Wilds of Dracoria is a living fantasy MMO where players do not simply level up. They build lives, families, professions, communities, cities, trade routes, ships, guilds, and histories.
+
+Players can become warriors, fishermen, blacksmiths, merchants, navigators, shipwrights, mayors, pirates, caravan guards, farmers, explorers, or anything in between. Every profession should have its own endgame, adventure, bosses, reputation, and legendary moments.
+
+The world does not revolve around the player. It exists with the player, changes over time, and remembers what players leave behind.
+
+## North Star
+
+> Build a living fantasy world where every player can become legendary, regardless of how they choose to live.
+
+## Documentation
+
+- [Game Bible](Docs/GameBible.md)
+- [World Bible](Docs/WorldBible.md)
+- [Systems Bible](Docs/SystemsBible.md)
+- [Codex Handoff](Docs/CodexHandoff.md)
 
 ## Prototype Goal
 
