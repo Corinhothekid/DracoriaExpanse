@@ -17,15 +17,10 @@ namespace WildsOfDracoria.CharacterCreation
 
             switch (raceIdOrName.Trim().ToLowerInvariant())
             {
-                case Human:
                 case "human": return Human;
-                case Elf:
                 case "elf": return Elf;
-                case Orc:
                 case "orc": return Orc;
-                case Goblin:
                 case "goblin": return Goblin;
-                case Dragonborn:
                 case "dragonborn": return Dragonborn;
                 default: return raceIdOrName.Trim().ToLowerInvariant().Replace(" ", "_");
             }
