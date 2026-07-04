@@ -18,6 +18,7 @@ namespace WildsOfDracoria.Combat
         private float nextAttackTime;
         private float dodgeEndsAt;
         private Vector3 dodgeVelocity;
+        private bool externalBlockInput;
         private IDamageable currentTarget;
 
         public bool IsBlocking { get; private set; }
@@ -50,6 +51,11 @@ namespace WildsOfDracoria.Combat
             {
                 GameManager.Instance.CharacterData.equippedWeapon = equippedWeaponName;
             }
+        }
+
+        public void SetBlockInput(bool isBlocking)
+        {
+            externalBlockInput = isBlocking;
         }
 
         public void BasicAttack()
@@ -145,7 +151,7 @@ namespace WildsOfDracoria.Combat
                 BasicAttack();
             }
 
-            IsBlocking = Input.GetMouseButton(1);
+            IsBlocking = Input.GetMouseButton(1) || externalBlockInput;
 
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
