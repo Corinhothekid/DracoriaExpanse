@@ -31,6 +31,7 @@ namespace WildsOfDracoria.CharacterCreation
         private int raceIndex;
         private int appearanceIndex;
         private int homelandIndex;
+        private bool listenersBound;
 
         private const int StepRace = 0;
         private const int StepNames = 1;
@@ -40,56 +41,32 @@ namespace WildsOfDracoria.CharacterCreation
 
         private void Awake()
         {
-            if (previousButton != null)
-            {
-                previousButton.onClick.AddListener(PreviousStep);
-            }
+            BindListeners();
+            Close();
+        }
 
-            if (nextButton != null)
-            {
-                nextButton.onClick.AddListener(NextStep);
-            }
-
-            if (optionAButton != null)
-            {
-                optionAButton.onClick.AddListener(PreviousOption);
-            }
-
-            if (optionBButton != null)
-            {
-                optionBButton.onClick.AddListener(NextOption);
-            }
-
-            if (optionCButton != null)
-            {
-                optionCButton.onClick.AddListener(UseSuggestedOption);
-            }
-
-            if (confirmButton != null)
-            {
-                confirmButton.onClick.AddListener(Confirm);
-            }
-
-            if (characterNameInput != null)
-            {
-                characterNameInput.text = creationData.characterName;
-                characterNameInput.onValueChanged.AddListener(value =>
-                {
-                    creationData.characterName = value;
-                    RefreshNamePreview();
-                });
-            }
-
-            if (familyNameInput != null)
-            {
-                familyNameInput.text = creationData.familyName;
-                familyNameInput.onValueChanged.AddListener(value =>
-                {
-                    creationData.familyName = value;
-                    RefreshNamePreview();
-                });
-            }
-
+        public void Configure(GameObject panelObject, Text stepTitle, Text primary, Text secondary, Text finalName, InputField characterName, InputField familyName, Button previous, Button next, Button optionA, Button optionB, Button optionC, Button confirm, Text optionAText, Text optionBText, Text optionCText, Renderer preview, Transform previewRoot)
+        {
+            panel = panelObject;
+            stepTitleText = stepTitle;
+            primaryText = primary;
+            secondaryText = secondary;
+            finalNameText = finalName;
+            characterNameInput = characterName;
+            familyNameInput = familyName;
+            previousButton = previous;
+            nextButton = next;
+            optionAButton = optionA;
+            optionBButton = optionB;
+            optionCButton = optionC;
+            confirmButton = confirm;
+            optionALabel = optionAText;
+            optionBLabel = optionBText;
+            optionCLabel = optionCText;
+            previewRenderer = preview;
+            previewTransform = previewRoot;
+            listenersBound = false;
+            BindListeners();
             Close();
         }
 
@@ -115,6 +92,43 @@ namespace WildsOfDracoria.CharacterCreation
             {
                 panel.SetActive(false);
             }
+        }
+
+        private void BindListeners()
+        {
+            if (listenersBound)
+            {
+                return;
+            }
+
+            if (previousButton != null) previousButton.onClick.AddListener(PreviousStep);
+            if (nextButton != null) nextButton.onClick.AddListener(NextStep);
+            if (optionAButton != null) optionAButton.onClick.AddListener(PreviousOption);
+            if (optionBButton != null) optionBButton.onClick.AddListener(NextOption);
+            if (optionCButton != null) optionCButton.onClick.AddListener(UseSuggestedOption);
+            if (confirmButton != null) confirmButton.onClick.AddListener(Confirm);
+
+            if (characterNameInput != null)
+            {
+                characterNameInput.text = creationData.characterName;
+                characterNameInput.onValueChanged.AddListener(value =>
+                {
+                    creationData.characterName = value;
+                    RefreshNamePreview();
+                });
+            }
+
+            if (familyNameInput != null)
+            {
+                familyNameInput.text = creationData.familyName;
+                familyNameInput.onValueChanged.AddListener(value =>
+                {
+                    creationData.familyName = value;
+                    RefreshNamePreview();
+                });
+            }
+
+            listenersBound = true;
         }
 
         private void NextStep()
@@ -200,51 +214,22 @@ namespace WildsOfDracoria.CharacterCreation
 
         private void Refresh()
         {
-            if (previousButton != null)
-            {
-                previousButton.gameObject.SetActive(stepIndex > StepRace);
-            }
-
-            if (nextButton != null)
-            {
-                nextButton.gameObject.SetActive(stepIndex < StepConfirm);
-            }
-
-            if (confirmButton != null)
-            {
-                confirmButton.gameObject.SetActive(stepIndex == StepConfirm);
-            }
-
-            if (characterNameInput != null)
-            {
-                characterNameInput.gameObject.SetActive(stepIndex == StepNames);
-            }
-
-            if (familyNameInput != null)
-            {
-                familyNameInput.gameObject.SetActive(stepIndex == StepNames);
-            }
+            if (previousButton != null) previousButton.gameObject.SetActive(stepIndex > StepRace);
+            if (nextButton != null) nextButton.gameObject.SetActive(stepIndex < StepConfirm);
+            if (confirmButton != null) confirmButton.gameObject.SetActive(stepIndex == StepConfirm);
+            if (characterNameInput != null) characterNameInput.gameObject.SetActive(stepIndex == StepNames);
+            if (familyNameInput != null) familyNameInput.gameObject.SetActive(stepIndex == StepNames);
 
             var optionsVisible = stepIndex == StepRace || stepIndex == StepAppearance || stepIndex == StepHomeland;
             SetOptionButtonsVisible(optionsVisible);
 
             switch (stepIndex)
             {
-                case StepRace:
-                    RefreshRaceStep();
-                    break;
-                case StepNames:
-                    RefreshNamesStep();
-                    break;
-                case StepAppearance:
-                    RefreshAppearanceStep();
-                    break;
-                case StepHomeland:
-                    RefreshHomelandStep();
-                    break;
-                case StepConfirm:
-                    RefreshConfirmStep();
-                    break;
+                case StepRace: RefreshRaceStep(); break;
+                case StepNames: RefreshNamesStep(); break;
+                case StepAppearance: RefreshAppearanceStep(); break;
+                case StepHomeland: RefreshHomelandStep(); break;
+                case StepConfirm: RefreshConfirmStep(); break;
             }
 
             RefreshNamePreview();
@@ -257,10 +242,7 @@ namespace WildsOfDracoria.CharacterCreation
             SetPrimary(race.displayName);
             SetSecondary($"{race.shortDescription}\n\nHomeland: {race.homelandName}\nTheme: {race.culturalTheme}\n{race.startingBonusFlavorText}");
             SetOptionLabels("Previous Race", "Next Race", "");
-            if (optionCButton != null)
-            {
-                optionCButton.gameObject.SetActive(false);
-            }
+            if (optionCButton != null) optionCButton.gameObject.SetActive(false);
         }
 
         private void RefreshNamesStep()
@@ -277,10 +259,7 @@ namespace WildsOfDracoria.CharacterCreation
             SetPrimary($"{preset.bodyType} Build");
             SetSecondary($"Skin: {preset.skinTone}\nHair: {preset.hairStyle}, {preset.hairColor}\nFacial Hair: {preset.facialHairStyle}\nEyes: {preset.eyeColor}");
             SetOptionLabels("Previous Look", "Next Look", "");
-            if (optionCButton != null)
-            {
-                optionCButton.gameObject.SetActive(false);
-            }
+            if (optionCButton != null) optionCButton.gameObject.SetActive(false);
         }
 
         private void RefreshHomelandStep()
@@ -336,28 +315,14 @@ namespace WildsOfDracoria.CharacterCreation
 
         private void ApplyPreview(RaceDefinition race)
         {
-            if (previewRenderer != null)
-            {
-                previewRenderer.material.color = race.previewColor;
-            }
-
-            if (previewTransform != null)
-            {
-                previewTransform.localScale = race.previewScale;
-            }
+            if (previewRenderer != null) previewRenderer.material.color = race.previewColor;
+            if (previewTransform != null) previewTransform.localScale = race.previewScale;
         }
 
         private void CaptureNameInputs()
         {
-            if (characterNameInput != null)
-            {
-                creationData.characterName = characterNameInput.text;
-            }
-
-            if (familyNameInput != null)
-            {
-                creationData.familyName = familyNameInput.text;
-            }
+            if (characterNameInput != null) creationData.characterName = characterNameInput.text;
+            if (familyNameInput != null) creationData.familyName = familyNameInput.text;
         }
 
         private void RefreshNamePreview()
@@ -370,81 +335,38 @@ namespace WildsOfDracoria.CharacterCreation
 
         private void SetOptionButtonsVisible(bool visible)
         {
-            if (optionAButton != null)
-            {
-                optionAButton.gameObject.SetActive(visible);
-            }
-
-            if (optionBButton != null)
-            {
-                optionBButton.gameObject.SetActive(visible);
-            }
-
-            if (optionCButton != null)
-            {
-                optionCButton.gameObject.SetActive(visible && stepIndex == StepHomeland);
-            }
+            if (optionAButton != null) optionAButton.gameObject.SetActive(visible);
+            if (optionBButton != null) optionBButton.gameObject.SetActive(visible);
+            if (optionCButton != null) optionCButton.gameObject.SetActive(visible && stepIndex == StepHomeland);
         }
 
         private void SetOptionLabels(string a, string b, string c)
         {
-            if (optionALabel != null)
-            {
-                optionALabel.text = a;
-            }
-
-            if (optionBLabel != null)
-            {
-                optionBLabel.text = b;
-            }
-
-            if (optionCLabel != null)
-            {
-                optionCLabel.text = c;
-            }
+            if (optionALabel != null) optionALabel.text = a;
+            if (optionBLabel != null) optionBLabel.text = b;
+            if (optionCLabel != null) optionCLabel.text = c;
         }
 
         private void SetStepTitle(string text)
         {
-            if (stepTitleText != null)
-            {
-                stepTitleText.text = text;
-            }
+            if (stepTitleText != null) stepTitleText.text = text;
         }
 
         private void SetPrimary(string text)
         {
-            if (primaryText != null)
-            {
-                primaryText.text = text;
-            }
+            if (primaryText != null) primaryText.text = text;
         }
 
         private void SetSecondary(string text)
         {
-            if (secondaryText != null)
-            {
-                secondaryText.text = text;
-            }
+            if (secondaryText != null) secondaryText.text = text;
         }
 
         private static int WrapIndex(int value, int count)
         {
-            if (count <= 0)
-            {
-                return 0;
-            }
-
-            if (value < 0)
-            {
-                return count - 1;
-            }
-
-            if (value >= count)
-            {
-                return 0;
-            }
-
+            if (count <= 0) return 0;
+            if (value < 0) return count - 1;
+            if (value >= count) return 0;
             return value;
         }
     }
