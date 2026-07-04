@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.CharacterCreation;
 using WildsOfDracoria.Combat;
 using WildsOfDracoria.Crafting;
 using WildsOfDracoria.Data;
@@ -19,6 +20,7 @@ namespace WildsOfDracoria.Systems
         [Header("UI")]
         [SerializeField] private InventoryUI inventoryUI;
         [SerializeField] private DialogueUI dialogueUI;
+        [SerializeField] private CharacterSheetUI characterSheetUI;
 
         public CharacterData CharacterData => characterData;
         public DialogueUI DialogueUI => dialogueUI;
@@ -43,6 +45,7 @@ namespace WildsOfDracoria.Systems
             FindUIIfNeeded();
             ProfessionManager.Instance?.RefreshFromCharacterData();
             RefreshInventoryUI();
+            RefreshCharacterSheetUI();
         }
 
         private void Update()
@@ -61,6 +64,33 @@ namespace WildsOfDracoria.Systems
             {
                 LoadGame();
             }
+        }
+
+        public void SetCharacterData(CharacterData data, bool saveImmediately)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            characterData = data;
+            characterData.EnsureDefaultSkills();
+            characterData.EnsureDefaultProfessions();
+            characterData.NormalizeInventory();
+            ProfessionManager.Instance?.RefreshFromCharacterData();
+            ApplyLoadedDataToPlayer();
+            RefreshInventoryUI();
+            RefreshCharacterSheetUI();
+
+            if (saveImmediately)
+            {
+                SaveGame();
+            }
+        }
+
+        public void ApplyCharacterCreation(CharacterCreationData creationData)
+        {
+            SetCharacterData(CharacterData.CreateFromCharacterCreation(creationData), true);
         }
 
         public void AddItem(string itemId, int quantity = 1)
@@ -94,11 +124,7 @@ namespace WildsOfDracoria.Systems
                 return;
             }
 
-            characterData = loaded;
-            characterData.NormalizeInventory();
-            ProfessionManager.Instance?.RefreshFromCharacterData();
-            ApplyLoadedDataToPlayer();
-            RefreshInventoryUI();
+            SetCharacterData(loaded, false);
             dialogueUI?.ShowLine("Progress loaded.");
         }
 
@@ -111,6 +137,12 @@ namespace WildsOfDracoria.Systems
         public void RegisterDialogueUI(DialogueUI ui)
         {
             dialogueUI = ui;
+        }
+
+        public void RegisterCharacterSheetUI(CharacterSheetUI ui)
+        {
+            characterSheetUI = ui;
+            RefreshCharacterSheetUI();
         }
 
         private void EnsureProfessionManager()
@@ -156,11 +188,21 @@ namespace WildsOfDracoria.Systems
             {
                 dialogueUI = FindObjectOfType<DialogueUI>(true);
             }
+
+            if (characterSheetUI == null)
+            {
+                characterSheetUI = FindObjectOfType<CharacterSheetUI>(true);
+            }
         }
 
         private void RefreshInventoryUI()
         {
             inventoryUI?.Refresh(characterData);
+        }
+
+        private void RefreshCharacterSheetUI()
+        {
+            characterSheetUI?.Refresh(characterData);
         }
     }
 }
