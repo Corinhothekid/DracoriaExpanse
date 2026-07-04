@@ -1,14 +1,14 @@
-# Wilds of Dracoria
+# Dracoria Expanse
 
 Mobile-first fantasy MMO prototype foundation built for Unity.
 
-Working title: **Wilds of Dracoria**  
+Working title: **Dracoria Expanse**  
 Repository name: **DracoriaExpanse**  
 Style target: **Classic WoW-inspired stylized fantasy**, with RuneScape-like life skills and long-term player identity.
 
 ## Core Pitch
 
-Wilds of Dracoria is a living fantasy MMO where players do not simply level up. They build lives, families, professions, communities, cities, trade routes, ships, guilds, and histories.
+Dracoria Expanse is a living fantasy MMO where players do not simply level up. They build lives, families, professions, communities, cities, trade routes, ships, guilds, and histories.
 
 Players can become warriors, fishermen, blacksmiths, merchants, navigators, shipwrights, mayors, pirates, caravan guards, farmers, explorers, or anything in between. Every profession should have its own endgame, adventure, bosses, reputation, and legendary moments.
 
