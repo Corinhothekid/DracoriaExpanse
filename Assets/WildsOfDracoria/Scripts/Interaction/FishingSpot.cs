@@ -40,8 +40,7 @@ namespace WildsOfDracoria.Interaction
 
             var caughtItem = catchTable[Random.Range(0, catchTable.Length)];
             GameManager.Instance.AddItem(caughtItem);
-            GameManager.Instance.GainSkillXP("Fishing", fishingXPReward);
-            ProfessionManager.Instance?.GainProfessionXP("Fishing", fishingXPReward, $"Caught {caughtItem} at Ironhaven.");
+            ProfessionManager.Instance?.AddXP(ProfessionIds.Fishing, fishingXPReward, $"Caught {caughtItem} at Ironhaven.");
             GameManager.Instance.DialogueUI?.ShowLine($"You caught: {caughtItem}");
 
             isFishing = false;
