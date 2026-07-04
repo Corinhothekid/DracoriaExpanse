@@ -2,6 +2,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using WildsOfDracoria.Data;
+using WildsOfDracoria.Items;
 using WildsOfDracoria.Systems;
 
 namespace WildsOfDracoria.UI
@@ -52,7 +53,8 @@ namespace WildsOfDracoria.UI
             {
                 foreach (var item in data.inventory)
                 {
-                    builder.AppendLine($"{item.itemName} x{item.quantity}");
+                    item.Normalize();
+                    builder.AppendLine($"{ItemDatabase.GetDisplayName(item.itemId)} x{item.quantity}");
                 }
             }
 
