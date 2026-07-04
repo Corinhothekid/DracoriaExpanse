@@ -1,4 +1,5 @@
 using System;
+using WildsOfDracoria.Visuals;
 
 namespace WildsOfDracoria.CharacterCreation
 {
@@ -15,6 +16,7 @@ namespace WildsOfDracoria.CharacterCreation
         public string facialHairStyle = "None";
         public string eyeColor = "Hazel";
         public string startingHomeland = "Ironhaven";
+        public CharacterVisualProfile visualProfile = new CharacterVisualProfile();
 
         public string FullName => $"{characterName} {familyName}".Trim();
         public string HouseName => $"House {familyName}".Trim();
