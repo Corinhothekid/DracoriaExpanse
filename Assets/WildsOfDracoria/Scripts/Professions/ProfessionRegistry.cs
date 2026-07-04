@@ -9,8 +9,8 @@ namespace WildsOfDracoria.Professions
         {
             new ProfessionDefinition(ProfessionIds.Fishing, "Fishing", "Catch fish, discover waters, and eventually face legendary sea creatures.", true),
             new ProfessionDefinition(ProfessionIds.Mining, "Mining", "Extract ore, stone, gems, and rare materials from the world.", false),
-            new ProfessionDefinition(ProfessionIds.Blacksmithing, "Blacksmithing", "Forge tools, weapons, armor, fittings, and world-building materials.", false),
-            new ProfessionDefinition(ProfessionIds.Cooking, "Cooking", "Prepare meals that support travel, work, combat, and community life.", false),
+            new ProfessionDefinition(ProfessionIds.Blacksmithing, "Blacksmithing", "Forge tools, weapons, armor, fittings, and world-building materials.", true),
+            new ProfessionDefinition(ProfessionIds.Cooking, "Cooking", "Prepare meals that support travel, work, combat, and community life.", true),
             new ProfessionDefinition(ProfessionIds.Sailing, "Sailing", "Operate vessels, read water conditions, and support sea travel when sailing is built later.", false),
             new ProfessionDefinition(ProfessionIds.Merchanting, "Merchanting", "Move goods, run shops, manage routes, and build reputation through trade.", false),
             new ProfessionDefinition(ProfessionIds.Logging, "Logging", "Harvest wood and forest materials for construction, crafting, and ships.", false),
