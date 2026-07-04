@@ -4,6 +4,7 @@ using System.Linq;
 using WildsOfDracoria.CharacterCreation;
 using WildsOfDracoria.Items;
 using WildsOfDracoria.Professions;
+using WildsOfDracoria.Visuals;
 
 namespace WildsOfDracoria.Data
 {
@@ -20,6 +21,7 @@ namespace WildsOfDracoria.Data
         public string facialHairStyle = "None";
         public string eyeColor = "Hazel";
         public string startingHomeland = "Ironhaven";
+        public CharacterVisualProfile visualProfile = new CharacterVisualProfile();
 
         // Kept for compatibility with the first prototype save shape.
         public int health = 100;
@@ -42,6 +44,7 @@ namespace WildsOfDracoria.Data
             data.EnsureDefaultSkills();
             data.EnsureDefaultProfessions();
             data.NormalizeInventory();
+            data.EnsureVisualProfile();
             return data;
         }
 
@@ -70,6 +73,7 @@ namespace WildsOfDracoria.Data
             facialHairStyle = CleanName(creationData.facialHairStyle, "None");
             eyeColor = CleanName(creationData.eyeColor, "Hazel");
             startingHomeland = CleanName(creationData.startingHomeland, raceDefinition.homelandName);
+            visualProfile = BuildVisualProfileFromLegacyFields(creationData.race);
         }
 
         public void EnsureDefaultSkills()
@@ -114,6 +118,8 @@ namespace WildsOfDracoria.Data
             {
                 startingHomeland = "Ironhaven";
             }
+
+            EnsureVisualProfile();
 
             currentProfessionFocus = ProfessionIds.Normalize(currentProfessionFocus);
             if (string.IsNullOrWhiteSpace(currentProfessionFocus))
@@ -160,6 +166,16 @@ namespace WildsOfDracoria.Data
             {
                 item.Normalize();
             }
+        }
+
+        public void EnsureVisualProfile()
+        {
+            if (visualProfile == null)
+            {
+                visualProfile = BuildVisualProfileFromLegacyFields(race);
+            }
+
+            visualProfile.Normalize();
         }
 
         public SkillData GetSkill(string skillName)
@@ -238,6 +254,26 @@ namespace WildsOfDracoria.Data
             return true;
         }
 
+        private CharacterVisualProfile BuildVisualProfileFromLegacyFields(string raceIdOrName)
+        {
+            var normalizedRace = RaceIds.Normalize(raceIdOrName);
+            return new CharacterVisualProfile
+            {
+                race = normalizedRace,
+                bodyType = NormalizeVisualId(bodyType, "average"),
+                skinToneId = NormalizeVisualId(skinTone, RaceVisualRegistry.Get(normalizedRace).defaultSkinTone),
+                hairStyleId = MapHairStyle(hairStyle),
+                hairColorId = NormalizeVisualId(hairColor, "brown"),
+                eyeColorId = NormalizeVisualId(eyeColor, "hazel"),
+                faceId = "face_soft",
+                facialHairId = MapFacialHair(facialHairStyle),
+                outfitId = "outfit_traveler",
+                armorSetId = "armor_none",
+                capeId = "cape_none",
+                weaponVisualId = "weapon_training_sword"
+            };
+        }
+
         private void AddSkillIfMissing(string skillName)
         {
             if (GetSkill(skillName) == null)
@@ -249,6 +285,33 @@ namespace WildsOfDracoria.Data
         private static string CleanName(string value, string fallback)
         {
             return string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
+        }
+
+        private static string NormalizeVisualId(string value, string fallback)
+        {
+            return string.IsNullOrWhiteSpace(value) ? fallback : value.Trim().ToLowerInvariant().Replace(" ", "_");
+        }
+
+        private static string MapHairStyle(string value)
+        {
+            switch (NormalizeVisualId(value, "short"))
+            {
+                case "long": return "hair_long";
+                case "braided":
+                case "spiky": return "hair_spiky";
+                case "shaved": return "hair_none";
+                default: return "hair_short";
+            }
+        }
+
+        private static string MapFacialHair(string value)
+        {
+            switch (NormalizeVisualId(value, "none"))
+            {
+                case "trimmed": return "facial_trimmed";
+                case "full": return "facial_full";
+                default: return "facial_none";
+            }
         }
     }
 }
