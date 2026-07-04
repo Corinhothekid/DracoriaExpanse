@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using WildsOfDracoria.Visuals;
 
 namespace WildsOfDracoria.CharacterCreation
 {
@@ -31,6 +32,7 @@ namespace WildsOfDracoria.CharacterCreation
             preview.transform.localScale = new Vector3(70f, 120f, 70f);
             var previewRenderer = preview.GetComponent<Renderer>();
             Object.Destroy(preview.GetComponent<Collider>());
+            var previewVisualManager = preview.AddComponent<CharacterVisualManager>();
 
             var firstNameInput = CreateInput(panel.transform, "Character Name Input", "Character First Name", new Vector2(0.38f, 0.55f), new Vector2(1f, 0.64f), new Vector2(18f, 0f), new Vector2(-28f, 0f));
             var familyInput = CreateInput(panel.transform, "Family Name Input", "Family / House Name", new Vector2(0.38f, 0.42f), new Vector2(1f, 0.51f), new Vector2(18f, 0f), new Vector2(-28f, 0f));
@@ -44,16 +46,13 @@ namespace WildsOfDracoria.CharacterCreation
 
             var ui = panel.AddComponent<CharacterCreationUI>();
             ui.Configure(panel, title, primary, secondary, finalName, firstNameInput, familyInput, previous, next, optionA, optionB, optionC, confirm, GetButtonLabel(optionA), GetButtonLabel(optionB), GetButtonLabel(optionC), previewRenderer, preview.transform);
+            ui.SetPreviewVisualManager(previewVisualManager);
             return ui;
         }
 
         private static void EnsureEventSystem()
         {
-            if (Object.FindObjectOfType<EventSystem>() != null)
-            {
-                return;
-            }
-
+            if (Object.FindObjectOfType<EventSystem>() != null) return;
             var eventSystem = new GameObject("EventSystem");
             eventSystem.AddComponent<EventSystem>();
             eventSystem.AddComponent<StandaloneInputModule>();
@@ -101,11 +100,9 @@ namespace WildsOfDracoria.CharacterCreation
             rect.anchorMax = anchorMax;
             rect.offsetMin = offsetMin;
             rect.offsetMax = offsetMax;
-
             var text = CreateText(inputObject.transform, "Text", "", 18, TextAnchor.MiddleLeft, Vector2.zero, Vector2.one, new Vector2(12f, 0f), new Vector2(-12f, 0f));
             var placeholderText = CreateText(inputObject.transform, "Placeholder", placeholder, 18, TextAnchor.MiddleLeft, Vector2.zero, Vector2.one, new Vector2(12f, 0f), new Vector2(-12f, 0f));
             placeholderText.color = new Color(1f, 1f, 1f, 0.45f);
-
             var input = inputObject.AddComponent<InputField>();
             input.textComponent = text;
             input.placeholder = placeholderText;
