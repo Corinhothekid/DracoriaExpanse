@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.Combat;
 
 namespace WildsOfDracoria.Player
 {
@@ -8,6 +9,7 @@ namespace WildsOfDracoria.Player
         [Header("Movement")]
         [SerializeField] private float walkSpeed = 3.5f;
         [SerializeField] private float runSpeed = 6f;
+        [SerializeField] private float sprintStaminaCostPerSecond = 12f;
         [SerializeField] private float rotationSpeed = 12f;
         [SerializeField] private float jumpHeight = 1.2f;
         [SerializeField] private float gravity = -24f;
@@ -15,6 +17,7 @@ namespace WildsOfDracoria.Player
         [Header("References")]
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private PlayerInteractor interactor;
+        [SerializeField] private PlayerVitals vitals;
 
         private CharacterController characterController;
         private Vector2 moveInput;
@@ -26,6 +29,7 @@ namespace WildsOfDracoria.Player
         {
             characterController = GetComponent<CharacterController>();
             interactor = interactor != null ? interactor : GetComponent<PlayerInteractor>();
+            vitals = vitals != null ? vitals : GetComponent<PlayerVitals>();
 
             if (cameraTransform == null && Camera.main != null)
             {
@@ -107,7 +111,9 @@ namespace WildsOfDracoria.Player
             jumpRequested = false;
             verticalVelocity += gravity * Time.deltaTime;
 
-            var speed = runInput ? runSpeed : walkSpeed;
+            var wantsToSprint = runInput && moveDirection.sqrMagnitude > 0.001f;
+            var canSprint = vitals == null || vitals.TrySpendStamina(sprintStaminaCostPerSecond * Time.deltaTime);
+            var speed = wantsToSprint && canSprint ? runSpeed : walkSpeed;
             var velocity = (moveDirection * speed) + (Vector3.up * verticalVelocity);
             characterController.Move(velocity * Time.deltaTime);
         }
