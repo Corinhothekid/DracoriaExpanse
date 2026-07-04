@@ -14,8 +14,12 @@ namespace WildsOfDracoria.UI
 
         private void Awake()
         {
-            GameManager.Instance?.RegisterDialogueUI(this);
             Hide();
+        }
+
+        private void Start()
+        {
+            GameManager.Instance?.RegisterDialogueUI(this);
         }
 
         private void Update()
