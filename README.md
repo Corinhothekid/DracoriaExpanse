@@ -24,38 +24,31 @@ The world does not revolve around the player. It exists with the player, changes
 - [World Bible](Docs/WorldBible.md)
 - [Systems Bible](Docs/SystemsBible.md)
 - [Codex Handoff](Docs/CodexHandoff.md)
+- [Art Direction](Docs/ArtDirection.md)
 - [Prototype Setup](Docs/PrototypeSetup.md)
 
 ## Prototype Goal
 
-This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 005: Item Database**. It proves the foundation for MMO-style movement, interaction, character data, inventory, fishing, NPC dialogue, combat, enemy drops, mobile input, profession progression architecture, centralized item definitions, and local save/load.
+This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 009: Gathering Nodes**. It proves the foundation for MMO-style movement, interaction, character data, inventory, fishing, combat, mobile input, professions, crafting, visual customization, centralized items, resource gathering, and local save/load.
 
 ## Included Systems
 
 - Third-person WASD movement with run and jump
-- Camera follow with swipe/drag support
-- Virtual joystick movement
-- Mobile attack, block, dodge, sprint, and interact buttons
-- Reusable 6-slot empty action bar
-- Basic menu buttons for Inventory, Skills, Map, and Character
-- Notification and XP popup foundation
-- Ironhaven placeholder village scene builder
-- Fishing prototype migrated into the profession framework
-- Profession data, registry, manager, save/load, and list UI
-- Locked professions visible in UI
+- Mobile controls and camera swipe support
+- Ironhaven placeholder village, harbor, forge, campfire, and gathering nodes
+- Character creation and character sheet foundation
+- Modular placeholder character visual customization architecture
 - Central ItemDatabase with item definitions, item types, rarity, stack limits, values, weight, and gameplay flags
 - Inventory saved as item IDs and quantities
-- Fishing rewards and Forest Wolf drops migrated to database item IDs
-- Inventory UI display names resolved through ItemDatabase
+- Fishing rewards and Forest Wolf drops using database item IDs
+- Profession data, registry, manager, save/load, and list UI
+- Crafting framework with forge/campfire recipes
+- Gathering framework with Copper Vein, Oak Tree, and Wheat Patch nodes
+- Node depletion and respawn during play
+- Notification and XP popup foundation
 - Captain Alden dialogue
 - JSON save/load placeholder
-- Player health and stamina
-- Basic attack, block, and dodge
-- Weapon data foundation
-- Damage system with `IDamageable`
-- Forest Wolf enemy AI
-- Enemy drops and combat XP
-- Player and enemy combat UI
+- Player health, stamina, combat, weapon foundation, and Forest Wolf AI
 
 ## Unity Setup
 
@@ -77,7 +70,7 @@ PC testing:
 - `Middle Mouse Drag`: Rotate camera
 - `Left Shift`: Sprint
 - `Space`: Jump
-- `E`: Interact
+- `E`: Interact and gather
 - `Left Mouse`: Basic attack
 - `Right Mouse`: Block
 - `Left Alt`: Dodge roll placeholder
@@ -93,10 +86,10 @@ Mobile UI:
 - `BLK`: Hold block
 - `DOD`: Dodge
 - `RUN`: Hold sprint
-- `USE`: Interact
+- `USE`: Interact and gather
 - `INV`: Inventory
 - `SKL`: Profession list
-- `MAP`, `CHR`: Placeholder menu buttons
+- `MAP`, `CHR`: Placeholder menu buttons / character panel
 
 ## Folder Structure
 
@@ -110,9 +103,12 @@ Assets/
     Scripts/
       AI/
       Camera/
+      CharacterCreation/
       Combat/
+      Crafting/
       Data/
       Editor/
+      Gathering/
       Interaction/
       Items/
       Player/
@@ -121,13 +117,14 @@ Assets/
       Systems/
       UI/
         Mobile/
+      Visuals/
 Docs/
 ```
 
 ## Next Steps
 
-1. Add crafting recipes that consume and produce ItemDatabase IDs.
-2. Add mining as the next profession loop using ItemDatabase ore definitions.
-3. Fishing polish inside the profession framework.
-4. Replace primitive placeholders with low-poly fantasy art.
-5. Add quests, economy, sailing, and networking later.
+1. Add mining/crafting balance polish now that Copper Ore can be gathered.
+2. Add a simple recipe ingredient loop around Wheat and Simple Bread.
+3. Add low-poly/anime-style placeholder art replacements for nodes and characters.
+4. Add quest/contracts later, after the resource loop feels stable.
+5. Add economy, sailing, cities, and networking later.
