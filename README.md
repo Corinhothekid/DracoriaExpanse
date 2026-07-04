@@ -7,7 +7,7 @@ Repository name: **DracoriaExpanse**
 
 ## Prototype Goal
 
-This first slice creates a small third-person playable scene called **Ironhaven**. It proves the foundation for MMO-style movement, interaction, character data, skills, inventory, fishing, NPC dialogue, and local save/load.
+This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 002: Basic Combat & Enemy AI**. It proves the foundation for MMO-style movement, interaction, character data, skills, inventory, fishing, NPC dialogue, combat, enemy drops, and local save/load.
 
 ## Included Systems
 
@@ -26,6 +26,14 @@ This first slice creates a small third-person playable scene called **Ironhaven*
 - Inventory UI
 - Captain Alden dialogue
 - JSON save/load placeholder
+- Player health and stamina
+- Sprint stamina drain and stamina regeneration
+- Basic attack, block, and dodge
+- Weapon data foundation
+- Damage system with `IDamageable`
+- Forest Wolf enemy AI
+- Enemy drops and combat XP
+- Player and enemy combat UI
 
 ## Unity Setup
 
@@ -41,9 +49,12 @@ This first slice creates a small third-person playable scene called **Ironhaven*
 ## Controls
 
 - `WASD` / arrow keys: Move
-- `Left Shift`: Run
+- `Left Shift`: Sprint
 - `Space`: Jump
 - `E`: Interact
+- `Left Mouse`: Basic attack
+- `Right Mouse`: Block
+- `Left Alt`: Dodge roll placeholder
 - `I`: Toggle inventory
 - `F5`: Save
 - `F9`: Load
@@ -58,7 +69,9 @@ Assets/
     Prefabs/
     Scenes/
     Scripts/
+      AI/
       Camera/
+      Combat/
       Data/
       Editor/
       Interaction/
@@ -66,15 +79,16 @@ Assets/
       Save/
       Systems/
       UI/
+Docs/
 ```
 
 ## Next Steps
 
-1. Add mobile joystick and action buttons.
+1. Add mobile joystick and combat buttons.
 2. Replace primitive placeholders with low-poly fantasy art.
-3. Add mining, blacksmithing, cooking, and sailing loops.
-4. Add Captain Alden's first quest.
-5. Add character creation and family names.
-6. Add day/night lighting and ambient audio.
+3. Add enemy spawn points and respawning.
+4. Add mining, blacksmithing, cooking, and sailing loops.
+5. Add Captain Alden's first quest.
+6. Add character creation and family names.
 7. Add a simple local economy.
 8. Add networking only after the single-player prototype feels good.
