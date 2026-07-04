@@ -10,6 +10,11 @@ namespace WildsOfDracoria.Save
 
         public static string SavePath => Path.Combine(Application.persistentDataPath, SaveFileName);
 
+        public static bool HasSave()
+        {
+            return File.Exists(SavePath);
+        }
+
         public static void Save(CharacterData characterData)
         {
             if (characterData == null)
