@@ -23,6 +23,10 @@ namespace WildsOfDracoria.Professions
         [FormerlySerializedAs("professionJournal")]
         public List<string> journalEntries = new List<string>();
 
+        public ProfessionData()
+        {
+        }
+
         public ProfessionData(string professionId, string displayName, string description, bool isUnlocked = false)
         {
             this.professionId = ProfessionIds.Normalize(professionId);
