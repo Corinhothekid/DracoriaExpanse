@@ -4,7 +4,7 @@ This file gives Codex the working vision and development guardrails.
 
 ## Project
 
-**Wilds of Dracoria**: a mobile-first living fantasy MMO prototype built in Unity.
+**Dracoria Expanse**: a mobile-first living fantasy MMO prototype built in Unity.
 
 ## Style Target
 
