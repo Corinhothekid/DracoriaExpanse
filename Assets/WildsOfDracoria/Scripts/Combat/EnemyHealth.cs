@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.Items;
 using WildsOfDracoria.Systems;
 using WildsOfDracoria.UI;
 
@@ -27,9 +28,9 @@ namespace WildsOfDracoria.Combat
             currentHealth = maxHealth;
             if (dropTable.drops.Count == 0)
             {
-                dropTable.drops.Add(new EnemyDrop { itemName = "Wolf Pelt", dropChance = 0.65f });
-                dropTable.drops.Add(new EnemyDrop { itemName = "Raw Meat", dropChance = 0.8f });
-                dropTable.drops.Add(new EnemyDrop { itemName = "Small Fang", dropChance = 0.25f });
+                dropTable.drops.Add(new EnemyDrop { itemId = ItemIds.WolfPelt, dropChance = 0.65f });
+                dropTable.drops.Add(new EnemyDrop { itemId = ItemIds.RawMeat, dropChance = 0.8f });
+                dropTable.drops.Add(new EnemyDrop { itemId = ItemIds.SmallFang, dropChance = 0.25f });
             }
         }
 
@@ -65,7 +66,7 @@ namespace WildsOfDracoria.Combat
             rewardsGranted = true;
             foreach (var drop in dropTable.RollDrops())
             {
-                GameManager.Instance.AddItem(drop.itemName, drop.quantity);
+                GameManager.Instance.AddItem(drop.itemId, drop.quantity);
             }
         }
 
