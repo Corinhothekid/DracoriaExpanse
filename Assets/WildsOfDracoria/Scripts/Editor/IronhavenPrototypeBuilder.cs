@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using WildsOfDracoria.AI;
 using WildsOfDracoria.CameraRig;
 using WildsOfDracoria.Combat;
+using WildsOfDracoria.Crafting;
 using WildsOfDracoria.Interaction;
 using WildsOfDracoria.Player;
 using WildsOfDracoria.Systems;
@@ -148,6 +149,11 @@ namespace WildsOfDracoria.EditorTools
             forge.GetComponent<Collider>().isTrigger = true;
             forge.AddComponent<Forge>();
 
+            var campfire = CreateBox("Campfire", new Vector3(-4.2f, 0.45f, 2.6f), new Vector3(1.2f, 0.35f, 1.2f), materials.forge);
+            campfire.GetComponent<Collider>().isTrigger = true;
+            var campfireStation = campfire.AddComponent<CraftingStation>();
+            campfireStation.Configure(CraftingStationType.Campfire);
+
             var board = CreateBox("NoticeBoard", new Vector3(3.2f, 1f, 3.5f), new Vector3(1.8f, 1.6f, 0.2f), materials.wood);
             board.GetComponent<Collider>().isTrigger = true;
             board.AddComponent<NoticeBoard>();
@@ -224,6 +230,30 @@ namespace WildsOfDracoria.EditorTools
             var inventoryUI = inventory.AddComponent<InventoryUI>();
             SetSerializedField(inventoryUI, "panel", inventory);
             SetSerializedField(inventoryUI, "inventoryText", inventoryText);
+
+            CreateCraftingUI(canvasObject.transform);
+        }
+
+        private static void CreateCraftingUI(Transform parent)
+        {
+            var panel = CreatePanel(parent, "Crafting Panel", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(560f, 380f));
+            var title = CreateTextInRect(panel.transform, "Crafting Title", "Crafting", 20, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(16f, -50f), new Vector2(-16f, -10f));
+            var recipeList = CreateTextInRect(panel.transform, "Recipe List", "Recipes", 15, TextAnchor.UpperLeft, new Vector2(0f, 0f), new Vector2(0.38f, 1f), new Vector2(14f, 70f), new Vector2(-8f, -58f));
+            var details = CreateTextInRect(panel.transform, "Recipe Details", "Details", 14, TextAnchor.UpperLeft, new Vector2(0.38f, 0.18f), new Vector2(1f, 1f), new Vector2(10f, 8f), new Vector2(-14f, -58f));
+            var warning = CreateTextInRect(panel.transform, "Crafting Warning", "", 14, TextAnchor.MiddleLeft, new Vector2(0.38f, 0f), new Vector2(1f, 0.18f), new Vector2(10f, 48f), new Vector2(-14f, -8f));
+            warning.color = new Color(1f, 0.82f, 0.35f);
+            var nextButton = CreateUIButton(panel.transform, "Next Recipe Button", "Next", new Vector2(0f, 0f), new Vector2(16f, 16f), new Vector2(100f, 34f));
+            var craftButton = CreateUIButton(panel.transform, "Craft Button", "Craft", new Vector2(1f, 0f), new Vector2(-116f, 16f), new Vector2(100f, 34f));
+
+            var craftingUI = panel.AddComponent<CraftingUI>();
+            SetSerializedField(craftingUI, "panel", panel);
+            SetSerializedField(craftingUI, "titleText", title);
+            SetSerializedField(craftingUI, "recipeListText", recipeList);
+            SetSerializedField(craftingUI, "detailsText", details);
+            SetSerializedField(craftingUI, "warningText", warning);
+            SetSerializedField(craftingUI, "nextRecipeButton", nextButton);
+            SetSerializedField(craftingUI, "craftButton", craftButton);
+            panel.SetActive(false);
         }
 
         private static GameObject CreatePanel(Transform parent, string name, Vector2 anchor, Vector2 anchoredPosition, Vector2 size)
@@ -257,6 +287,25 @@ namespace WildsOfDracoria.EditorTools
             rect.offsetMin = new Vector2(12f, 8f);
             rect.offsetMax = new Vector2(-12f, -8f);
             return uiText;
+        }
+
+        private static Text CreateTextInRect(Transform parent, string name, string text, int size, TextAnchor alignment, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
+        {
+            var uiText = CreateText(parent, name, text, size, alignment);
+            var rect = uiText.GetComponent<RectTransform>();
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.offsetMin = offsetMin;
+            rect.offsetMax = offsetMax;
+            return uiText;
+        }
+
+        private static Button CreateUIButton(Transform parent, string name, string label, Vector2 anchor, Vector2 anchoredPosition, Vector2 size)
+        {
+            var buttonObject = CreatePanel(parent, name, anchor, anchoredPosition, size);
+            buttonObject.GetComponent<Image>().color = new Color(0.12f, 0.15f, 0.18f, 0.95f);
+            CreateText(buttonObject.transform, "Label", label, 14, TextAnchor.MiddleCenter);
+            return buttonObject.AddComponent<Button>();
         }
 
         private static Slider CreateSlider(Transform parent, string name, Vector2 anchor, Vector2 anchoredPosition, Vector2 size, Color fillColor)
