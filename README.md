@@ -27,7 +27,7 @@ The world does not revolve around the player. It exists with the player, changes
 
 ## Prototype Goal
 
-This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 003: Mobile Controls & Action Bar**. It proves the foundation for MMO-style movement, interaction, character data, skills, inventory, fishing, NPC dialogue, combat, enemy drops, mobile input, and local save/load.
+This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 004: Profession Framework**. It proves the foundation for MMO-style movement, interaction, character data, skills, inventory, fishing, NPC dialogue, combat, enemy drops, mobile input, profession progression architecture, and local save/load.
 
 ## Included Systems
 
@@ -39,14 +39,9 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 - Basic menu buttons for Inventory, Skills, Map, and Character
 - Notification and XP popup foundation
 - Ironhaven placeholder village scene builder
-- Dock/harbor area
-- Blacksmith area
-- Fishing spot
-- Placeholder NPCs
-- Character data model
-- Skill data and XP/level-up logic
-- Interaction system
-- Fishing prototype
+- Fishing prototype migrated into the profession framework
+- Profession data, registry, manager, save/load, and list UI
+- Locked professions visible in UI
 - Inventory UI
 - Captain Alden dialogue
 - JSON save/load placeholder
@@ -66,8 +61,9 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 4. Create an empty scene named `IronhavenPrototype` under `Assets/WildsOfDracoria/Scenes`.
 5. Choose `Wilds of Dracoria > Build Ironhaven Prototype Scene`.
 6. Choose `Wilds of Dracoria > Add Mobile Controls To Current Scene`.
-7. Save the scene.
-8. Press Play.
+7. Choose `Wilds of Dracoria > Add Profession Framework To Current Scene`.
+8. Save the scene.
+9. Press Play.
 
 ## Controls
 
@@ -94,7 +90,9 @@ Mobile UI:
 - `DOD`: Dodge
 - `RUN`: Hold sprint
 - `USE`: Interact
-- `INV`, `SKL`, `MAP`, `CHR`: Basic menu buttons
+- `INV`: Inventory
+- `SKL`: Profession list
+- `MAP`, `CHR`: Placeholder menu buttons
 
 ## Folder Structure
 
@@ -113,6 +111,7 @@ Assets/
       Editor/
       Interaction/
       Player/
+      Professions/
       Save/
       Systems/
       UI/
@@ -122,8 +121,8 @@ Docs/
 
 ## Next Steps
 
-1. Replace primitive placeholders with low-poly fantasy art.
-2. Add enemy spawn points and respawning.
-3. Tune touch camera sensitivity after device testing.
-4. Add professions and quests later.
-5. Add networking only after the single-player prototype feels good.
+1. Fishing polish inside the profession framework.
+2. Add mining as the next profession loop.
+3. Replace primitive placeholders with low-poly fantasy art.
+4. Tune touch camera sensitivity after device testing.
+5. Add quests, economy, sailing, and networking later.
