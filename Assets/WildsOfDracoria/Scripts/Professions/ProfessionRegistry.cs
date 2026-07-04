@@ -8,13 +8,13 @@ namespace WildsOfDracoria.Professions
         private static readonly List<ProfessionDefinition> Definitions = new List<ProfessionDefinition>
         {
             new ProfessionDefinition(ProfessionIds.Fishing, "Fishing", "Catch fish, discover waters, and eventually face legendary sea creatures.", true),
-            new ProfessionDefinition(ProfessionIds.Mining, "Mining", "Extract ore, stone, gems, and rare materials from the world.", false),
+            new ProfessionDefinition(ProfessionIds.Mining, "Mining", "Extract ore, stone, gems, and rare materials from the world.", true),
             new ProfessionDefinition(ProfessionIds.Blacksmithing, "Blacksmithing", "Forge tools, weapons, armor, fittings, and world-building materials.", true),
             new ProfessionDefinition(ProfessionIds.Cooking, "Cooking", "Prepare meals that support travel, work, combat, and community life.", true),
             new ProfessionDefinition(ProfessionIds.Sailing, "Sailing", "Operate vessels, read water conditions, and support sea travel when sailing is built later.", false),
             new ProfessionDefinition(ProfessionIds.Merchanting, "Merchanting", "Move goods, run shops, manage routes, and build reputation through trade.", false),
-            new ProfessionDefinition(ProfessionIds.Logging, "Logging", "Harvest wood and forest materials for construction, crafting, and ships.", false),
-            new ProfessionDefinition(ProfessionIds.Farming, "Farming", "Grow crops, tend land, and support settlements with food and trade goods.", false),
+            new ProfessionDefinition(ProfessionIds.Logging, "Logging", "Harvest wood and forest materials for construction, crafting, and ships.", true),
+            new ProfessionDefinition(ProfessionIds.Farming, "Farming", "Grow crops, tend land, and support settlements with food and trade goods.", true),
             new ProfessionDefinition(ProfessionIds.Hunting, "Hunting", "Track beasts, gather hides and meat, and protect settlements from wildlife.", false),
             new ProfessionDefinition(ProfessionIds.Navigation, "Navigation", "Chart routes, guide travelers, and master dangerous journeys.", false)
         };
