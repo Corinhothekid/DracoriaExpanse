@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WildsOfDracoria.CharacterCreation;
 using WildsOfDracoria.Items;
 using WildsOfDracoria.Professions;
 
@@ -12,6 +13,13 @@ namespace WildsOfDracoria.Data
         public string characterName = "New Adventurer";
         public string familyName = "Drakeward";
         public string race = "Human";
+        public string bodyType = "Average";
+        public string skinTone = "Warm";
+        public string hairStyle = "Short";
+        public string hairColor = "Brown";
+        public string facialHairStyle = "None";
+        public string eyeColor = "Hazel";
+        public string startingHomeland = "Ironhaven";
 
         // Kept for compatibility with the first prototype save shape.
         public int health = 100;
@@ -35,6 +43,33 @@ namespace WildsOfDracoria.Data
             data.EnsureDefaultProfessions();
             data.NormalizeInventory();
             return data;
+        }
+
+        public static CharacterData CreateFromCharacterCreation(CharacterCreationData creationData)
+        {
+            var data = CreateDefault();
+            data.ApplyCharacterCreation(creationData);
+            return data;
+        }
+
+        public void ApplyCharacterCreation(CharacterCreationData creationData)
+        {
+            if (creationData == null)
+            {
+                return;
+            }
+
+            var raceDefinition = RaceRegistry.Get(creationData.race);
+            characterName = CleanName(creationData.characterName, "New");
+            familyName = CleanName(creationData.familyName, "Drakeward");
+            race = raceDefinition.displayName;
+            bodyType = CleanName(creationData.bodyType, "Average");
+            skinTone = CleanName(creationData.skinTone, "Warm");
+            hairStyle = CleanName(creationData.hairStyle, "Short");
+            hairColor = CleanName(creationData.hairColor, "Brown");
+            facialHairStyle = CleanName(creationData.facialHairStyle, "None");
+            eyeColor = CleanName(creationData.eyeColor, "Hazel");
+            startingHomeland = CleanName(creationData.startingHomeland, raceDefinition.homelandName);
         }
 
         public void EnsureDefaultSkills()
@@ -73,6 +108,11 @@ namespace WildsOfDracoria.Data
             if (string.IsNullOrWhiteSpace(equippedWeapon))
             {
                 equippedWeapon = "Training Sword";
+            }
+
+            if (string.IsNullOrWhiteSpace(startingHomeland))
+            {
+                startingHomeland = "Ironhaven";
             }
 
             currentProfessionFocus = ProfessionIds.Normalize(currentProfessionFocus);
@@ -204,6 +244,11 @@ namespace WildsOfDracoria.Data
             {
                 skills.Add(new SkillData(skillName));
             }
+        }
+
+        private static string CleanName(string value, string fallback)
+        {
+            return string.IsNullOrWhiteSpace(value) ? fallback : value.Trim();
         }
     }
 }
