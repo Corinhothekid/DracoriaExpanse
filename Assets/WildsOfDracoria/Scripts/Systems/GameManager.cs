@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.Combat;
 using WildsOfDracoria.Data;
 using WildsOfDracoria.Save;
 using WildsOfDracoria.UI;
@@ -86,6 +87,7 @@ namespace WildsOfDracoria.Systems
             }
 
             characterData = loaded;
+            ApplyLoadedDataToPlayer();
             RefreshInventoryUI();
             dialogueUI?.ShowLine("Progress loaded.");
         }
@@ -99,6 +101,18 @@ namespace WildsOfDracoria.Systems
         public void RegisterDialogueUI(DialogueUI ui)
         {
             dialogueUI = ui;
+        }
+
+        private void ApplyLoadedDataToPlayer()
+        {
+            var vitals = FindObjectOfType<PlayerVitals>();
+            vitals?.ApplyCharacterData(characterData);
+
+            var combat = FindObjectOfType<PlayerCombat>();
+            if (combat != null)
+            {
+                combat.EquipWeapon(characterData.equippedWeapon);
+            }
         }
 
         private void FindUIIfNeeded()
