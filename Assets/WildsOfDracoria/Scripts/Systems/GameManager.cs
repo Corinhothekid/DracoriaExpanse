@@ -7,6 +7,7 @@ using WildsOfDracoria.Professions;
 using WildsOfDracoria.Save;
 using WildsOfDracoria.UI;
 using WildsOfDracoria.UI.Mobile;
+using WildsOfDracoria.Visuals;
 
 namespace WildsOfDracoria.Systems
 {
@@ -45,6 +46,7 @@ namespace WildsOfDracoria.Systems
         {
             FindUIIfNeeded();
             ProfessionManager.Instance?.RefreshFromCharacterData();
+            ApplyLoadedDataToPlayer();
             RefreshInventoryUI();
             RefreshCharacterSheetUI();
         }
@@ -77,6 +79,7 @@ namespace WildsOfDracoria.Systems
             characterData = data;
             characterData.EnsureDefaultSkills();
             characterData.EnsureDefaultProfessions();
+            characterData.EnsureVisualProfile();
             characterData.NormalizeInventory();
             ProfessionManager.Instance?.RefreshFromCharacterData();
             ApplyLoadedDataToPlayer();
@@ -112,6 +115,7 @@ namespace WildsOfDracoria.Systems
 
         public void SaveGame()
         {
+            characterData.EnsureVisualProfile();
             JsonSaveSystem.Save(characterData);
             dialogueUI?.ShowLine("Progress saved.");
         }
@@ -178,6 +182,7 @@ namespace WildsOfDracoria.Systems
 
         private void ApplyLoadedDataToPlayer()
         {
+            var player = GameObject.FindGameObjectWithTag("Player");
             var vitals = FindObjectOfType<PlayerVitals>();
             vitals?.ApplyCharacterData(characterData);
 
@@ -185,6 +190,12 @@ namespace WildsOfDracoria.Systems
             if (combat != null)
             {
                 combat.EquipWeapon(characterData.equippedWeapon);
+            }
+
+            if (player != null)
+            {
+                var visuals = player.GetComponent<CharacterVisualManager>() ?? player.AddComponent<CharacterVisualManager>();
+                visuals.ApplyProfile(characterData.visualProfile);
             }
         }
 
@@ -202,7 +213,7 @@ namespace WildsOfDracoria.Systems
 
             if (characterSheetUI == null)
             {
-                characterSheetUI = FindObjectOfType<CharacterSheetUI>(true);
+                characterSheetUI = FindObjectOfType<CharacterSheetUI>(true) ?? CharacterSheetUIFactory.Create();
             }
         }
 
