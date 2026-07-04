@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.Data;
 using WildsOfDracoria.Systems;
 using WildsOfDracoria.UI;
 
@@ -24,18 +25,24 @@ namespace WildsOfDracoria.Combat
         private void Awake()
         {
             combat = GetComponent<PlayerCombat>();
-            var data = GameManager.Instance?.CharacterData;
-            maxHealth = data != null ? data.maxHealth : maxHealth;
-            maxStamina = data != null ? data.maxStamina : maxStamina;
-            currentHealth = data != null && data.currentHealth > 0 ? data.currentHealth : maxHealth;
-            currentStamina = data != null && data.currentStamina > 0 ? data.currentStamina : maxStamina;
-            SyncToCharacterData();
+            ApplyCharacterData(GameManager.Instance?.CharacterData);
         }
 
         private void Update()
         {
             RegenerateStamina();
             CombatUI.Instance?.SetPlayerVitals(currentHealth, maxHealth, currentStamina, maxStamina);
+        }
+
+        public void ApplyCharacterData(CharacterData data)
+        {
+            maxHealth = data != null && data.maxHealth > 0 ? data.maxHealth : maxHealth;
+            maxStamina = data != null && data.maxStamina > 0 ? data.maxStamina : maxStamina;
+            currentHealth = data != null && data.currentHealth > 0 ? data.currentHealth : maxHealth;
+            currentStamina = data != null && data.currentStamina > 0 ? data.currentStamina : maxStamina;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+            SyncToCharacterData();
         }
 
         public bool CanSpendStamina(float amount)
@@ -104,7 +111,7 @@ namespace WildsOfDracoria.Combat
 
             data.maxHealth = maxHealth;
             data.currentHealth = currentHealth;
-            data.maxStamina = maxStamina;
+            data.maxStamina = Mathf.RoundToInt(maxStamina);
             data.currentStamina = Mathf.RoundToInt(currentStamina);
             data.health = currentHealth;
             data.stamina = Mathf.RoundToInt(currentStamina);
