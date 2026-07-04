@@ -58,12 +58,12 @@ namespace WildsOfDracoria.Professions
 
             foreach (var definition in ProfessionRegistry.All)
             {
-                var profession = ProfessionManager.Instance.GetProfession(definition.professionName);
+                var profession = ProfessionManager.Instance.GetProfession(definition.professionId);
                 var locked = profession == null || !profession.isUnlocked;
                 var state = locked ? "Locked" : $"Level {profession.level} - {profession.masteryRank}";
-                var xp = locked ? "XP: --" : $"XP: {profession.currentXP}/{profession.xpRequired}";
+                var xp = locked ? "XP: --" : $"XP: {profession.currentXP}/{profession.xpToNextLevel}";
                 var reputation = locked ? "Rep: --" : $"Rep: {profession.reputation}";
-                builder.AppendLine($"{definition.professionName} ({definition.family})");
+                builder.AppendLine(definition.displayName);
                 builder.AppendLine($"  {state} | {xp} | {reputation}");
             }
 
