@@ -24,10 +24,11 @@ The world does not revolve around the player. It exists with the player, changes
 - [World Bible](Docs/WorldBible.md)
 - [Systems Bible](Docs/SystemsBible.md)
 - [Codex Handoff](Docs/CodexHandoff.md)
+- [Prototype Setup](Docs/PrototypeSetup.md)
 
 ## Prototype Goal
 
-This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 004: Profession Framework**. It proves the foundation for MMO-style movement, interaction, character data, skills, inventory, fishing, NPC dialogue, combat, enemy drops, mobile input, profession progression architecture, and local save/load.
+This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 005: Item Database**. It proves the foundation for MMO-style movement, interaction, character data, inventory, fishing, NPC dialogue, combat, enemy drops, mobile input, profession progression architecture, centralized item definitions, and local save/load.
 
 ## Included Systems
 
@@ -42,7 +43,10 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 - Fishing prototype migrated into the profession framework
 - Profession data, registry, manager, save/load, and list UI
 - Locked professions visible in UI
-- Inventory UI
+- Central ItemDatabase with item definitions, item types, rarity, stack limits, values, weight, and gameplay flags
+- Inventory saved as item IDs and quantities
+- Fishing rewards and Forest Wolf drops migrated to database item IDs
+- Inventory UI display names resolved through ItemDatabase
 - Captain Alden dialogue
 - JSON save/load placeholder
 - Player health and stamina
@@ -110,6 +114,7 @@ Assets/
       Data/
       Editor/
       Interaction/
+      Items/
       Player/
       Professions/
       Save/
@@ -121,8 +126,8 @@ Docs/
 
 ## Next Steps
 
-1. Fishing polish inside the profession framework.
-2. Add mining as the next profession loop.
-3. Replace primitive placeholders with low-poly fantasy art.
-4. Tune touch camera sensitivity after device testing.
+1. Add crafting recipes that consume and produce ItemDatabase IDs.
+2. Add mining as the next profession loop using ItemDatabase ore definitions.
+3. Fishing polish inside the profession framework.
+4. Replace primitive placeholders with low-poly fantasy art.
 5. Add quests, economy, sailing, and networking later.
