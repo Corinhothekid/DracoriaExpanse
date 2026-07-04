@@ -22,6 +22,7 @@ namespace WildsOfDracoria.Save
                 return;
             }
 
+            characterData.EnsureVisualProfile();
             characterData.NormalizeInventory();
             var json = JsonUtility.ToJson(characterData, true);
             File.WriteAllText(SavePath, json);
@@ -39,6 +40,7 @@ namespace WildsOfDracoria.Save
             var data = JsonUtility.FromJson<CharacterData>(json);
             data.EnsureDefaultSkills();
             data.EnsureDefaultProfessions();
+            data.EnsureVisualProfile();
             data.NormalizeInventory();
             return data;
         }
