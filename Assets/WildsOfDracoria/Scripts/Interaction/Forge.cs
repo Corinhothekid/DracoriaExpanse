@@ -1,13 +1,17 @@
-using WildsOfDracoria.Player;
-using WildsOfDracoria.Systems;
+using WildsOfDracoria.Crafting;
 
 namespace WildsOfDracoria.Interaction
 {
-    public class Forge : InteractableBase
+    public class Forge : CraftingStation
     {
-        public override void Interact(PlayerInteractor interactor)
+        private void Reset()
         {
-            GameManager.Instance.DialogueUI?.ShowLine("The Ironhaven forge is hot, but blacksmithing is not built yet.");
+            Configure(CraftingStationType.Forge);
+        }
+
+        private void Awake()
+        {
+            Configure(CraftingStationType.Forge);
         }
     }
 }
