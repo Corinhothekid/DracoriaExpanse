@@ -145,6 +145,18 @@ namespace WildsOfDracoria.Data
             return skill.GainXP(amount);
         }
 
+        public int GetInventoryQuantity(string itemId)
+        {
+            var normalizedId = ItemIds.Normalize(itemId);
+            var existing = inventory.FirstOrDefault(item => ItemIds.Normalize(item.itemId) == normalizedId);
+            return existing != null ? existing.quantity : 0;
+        }
+
+        public bool HasInventoryItem(string itemId, int quantity = 1)
+        {
+            return GetInventoryQuantity(itemId) >= quantity;
+        }
+
         public void AddInventoryItem(string itemId, int quantity = 1)
         {
             var normalizedId = ItemIds.Normalize(itemId);
@@ -161,6 +173,29 @@ namespace WildsOfDracoria.Data
             }
 
             inventory.Add(new InventoryItem(normalizedId, quantity));
+        }
+
+        public bool RemoveInventoryItem(string itemId, int quantity = 1)
+        {
+            var normalizedId = ItemIds.Normalize(itemId);
+            if (string.IsNullOrWhiteSpace(normalizedId) || quantity <= 0)
+            {
+                return false;
+            }
+
+            var existing = inventory.FirstOrDefault(item => ItemIds.Normalize(item.itemId) == normalizedId);
+            if (existing == null || existing.quantity < quantity)
+            {
+                return false;
+            }
+
+            existing.quantity -= quantity;
+            if (existing.quantity <= 0)
+            {
+                inventory.Remove(existing);
+            }
+
+            return true;
         }
 
         private void AddSkillIfMissing(string skillName)
