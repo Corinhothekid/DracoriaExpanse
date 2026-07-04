@@ -3,6 +3,7 @@ using WildsOfDracoria.CharacterCreation;
 using WildsOfDracoria.Combat;
 using WildsOfDracoria.Crafting;
 using WildsOfDracoria.Data;
+using WildsOfDracoria.Gathering;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.Save;
 using WildsOfDracoria.UI;
@@ -40,6 +41,7 @@ namespace WildsOfDracoria.Systems
             EnsureProfessionManager();
             EnsureCraftingManager();
             EnsureCharacterCreationStartup();
+            EnsureGatheringNodeBootstrap();
         }
 
         private void Start()
@@ -178,6 +180,16 @@ namespace WildsOfDracoria.Systems
             }
 
             gameObject.AddComponent<CharacterCreationStartup>();
+        }
+
+        private void EnsureGatheringNodeBootstrap()
+        {
+            if (GetComponent<GatheringNodeSceneBootstrap>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<GatheringNodeSceneBootstrap>();
         }
 
         private void ApplyLoadedDataToPlayer()
