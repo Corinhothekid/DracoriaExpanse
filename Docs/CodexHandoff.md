@@ -60,11 +60,12 @@ Current foundation includes:
 9. Crafting framework
 10. Gathering nodes
 11. Contracts and Notice Board
-12. Visual customization architecture
-13. JSON save/load
-14. Ironhaven starter village
-15. Unity 6.5 compatibility modernization pass
-16. Project standards and technical debt tracking
+12. Local market and vendor stall foundation
+13. Visual customization architecture
+14. JSON save/load
+15. Ironhaven starter village
+16. Unity 6.5 compatibility modernization pass
+17. Project standards and technical debt tracking
 
 ## What Codex Should Do Next
 
@@ -85,7 +86,8 @@ If no new system is specified, prefer stability, Unity compile fixes, and docume
 - Guilds
 - Cities
 - Sailing
-- Full economy
+- Full economy simulation
+- Auction houses or global markets
 - Crown Isles
 - Dynasties beyond existing identity/family data
 - AI world simulation
@@ -129,6 +131,7 @@ Assets/
       Input/
       Interaction/
       Items/
+      Markets/
       Player/
       Professions/
       Save/
@@ -155,18 +158,19 @@ Completed foundation:
 10. Unity 6.5 compatibility pass
 11. Project standards and technical debt tracker
 12. Contracts and Notice Board
+13. Local market and vendor stall foundation
 
 Possible next systems, only when requested:
 
 1. Unity compile/playtest fix pass
-2. Contract board usability polish
+2. Contract and market UI usability polish
 3. Gathering/crafting balance polish
 4. Simple bread and cooking loop polish
 5. Fishing polish
 6. Mining and blacksmithing expansion
 7. Homestead stub
 8. Simple boat/ferry stub
-9. Local market stub
+9. Player-owned stall selling pass
 10. Dynasty/family UI stub
 11. World manager with time/weather
 
