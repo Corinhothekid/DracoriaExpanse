@@ -6,6 +6,7 @@ using WildsOfDracoria.Crafting;
 using WildsOfDracoria.Data;
 using WildsOfDracoria.Gathering;
 using WildsOfDracoria.Inputs;
+using WildsOfDracoria.Markets;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.Save;
 using WildsOfDracoria.UI;
@@ -43,8 +44,10 @@ namespace WildsOfDracoria.Systems
             EnsureProfessionManager();
             EnsureCraftingManager();
             EnsureContractManager();
+            EnsureMarketManager();
             EnsureCharacterCreationStartup();
             EnsureGatheringNodeBootstrap();
+            EnsureVendorStallBootstrap();
         }
 
         private void Start()
@@ -52,6 +55,7 @@ namespace WildsOfDracoria.Systems
             FindUIIfNeeded();
             ProfessionManager.Instance?.RefreshFromCharacterData();
             ContractManager.Instance?.RefreshAllProgress();
+            MarketManager.Instance?.EnsureMarketData();
             ApplyLoadedDataToPlayer();
             RefreshPlayerUI();
         }
@@ -87,8 +91,10 @@ namespace WildsOfDracoria.Systems
             characterData.EnsureVisualProfile();
             characterData.NormalizeInventory();
             characterData.EnsureContracts();
+            characterData.EnsureMarketStalls();
             ProfessionManager.Instance?.RefreshFromCharacterData();
             ContractManager.Instance?.RefreshAllProgress();
+            MarketManager.Instance?.EnsureMarketData();
             ApplyLoadedDataToPlayer();
             RefreshPlayerUI();
 
@@ -124,6 +130,7 @@ namespace WildsOfDracoria.Systems
         {
             characterData.EnsureVisualProfile();
             characterData.EnsureContracts();
+            characterData.EnsureMarketStalls();
             JsonSaveSystem.Save(characterData);
             dialogueUI?.ShowLine("Progress saved.");
         }
@@ -194,6 +201,16 @@ namespace WildsOfDracoria.Systems
             gameObject.AddComponent<ContractManager>();
         }
 
+        private void EnsureMarketManager()
+        {
+            if (MarketManager.Instance != null || GetComponent<MarketManager>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<MarketManager>();
+        }
+
         private void EnsureCharacterCreationStartup()
         {
             if (GetComponent<CharacterCreationStartup>() != null)
@@ -212,6 +229,16 @@ namespace WildsOfDracoria.Systems
             }
 
             gameObject.AddComponent<GatheringNodeSceneBootstrap>();
+        }
+
+        private void EnsureVendorStallBootstrap()
+        {
+            if (GetComponent<VendorStallSceneBootstrap>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<VendorStallSceneBootstrap>();
         }
 
         private void ApplyLoadedDataToPlayer()
