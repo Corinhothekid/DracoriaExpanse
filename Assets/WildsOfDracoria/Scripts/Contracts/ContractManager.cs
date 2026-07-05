@@ -332,12 +332,13 @@ namespace WildsOfDracoria.Contracts
                 return;
             }
 
-            ProfessionManager.Instance?.AddXP(contract.rewardProfessionId, contract.rewardProfessionXP, $"Completed contract: {contract.title}.");
             var profession = ProfessionManager.Instance?.GetProfession(contract.rewardProfessionId);
             if (profession != null && contract.rewardReputation > 0)
             {
                 profession.reputation += contract.rewardReputation;
             }
+
+            ProfessionManager.Instance?.AddXP(contract.rewardProfessionId, contract.rewardProfessionXP, $"Completed contract: {contract.title}.");
         }
 
         private List<ContractData> GetSavedContracts()
