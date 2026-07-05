@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using WildsOfDracoria.Inputs;
 using WildsOfDracoria.Items;
 using WildsOfDracoria.Professions;
 
@@ -47,7 +48,7 @@ namespace WildsOfDracoria.Crafting
 
         private void Update()
         {
-            if (panel != null && panel.activeSelf && Input.GetKeyDown(KeyCode.Escape))
+            if (panel != null && panel.activeSelf && DracoriaInput.GetKeyDown(KeyCode.Escape))
             {
                 Close();
             }
