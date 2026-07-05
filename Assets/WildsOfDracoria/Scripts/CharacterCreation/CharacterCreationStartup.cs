@@ -16,7 +16,7 @@ namespace WildsOfDracoria.CharacterCreation
         {
             if (characterCreationUI == null)
             {
-                characterCreationUI = FindObjectOfType<CharacterCreationUI>(true);
+                characterCreationUI = Object.FindAnyObjectByType<CharacterCreationUI>(FindObjectsInactive.Include);
             }
 
             if (characterCreationUI == null)
