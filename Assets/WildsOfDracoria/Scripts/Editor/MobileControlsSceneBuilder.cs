@@ -2,6 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem.UI;
+#endif
 using UnityEngine.UI;
 using WildsOfDracoria.Player;
 using WildsOfDracoria.UI.Mobile;
@@ -59,14 +62,18 @@ namespace WildsOfDracoria.EditorTools
 
         private static void EnsureEventSystem()
         {
-            if (Object.FindObjectOfType<EventSystem>() != null)
+            if (Object.FindAnyObjectByType<EventSystem>(FindObjectsInactive.Include) != null)
             {
                 return;
             }
 
             var eventSystem = new GameObject("EventSystem");
             eventSystem.AddComponent<EventSystem>();
+#if ENABLE_INPUT_SYSTEM
+            eventSystem.AddComponent<InputSystemUIInputModule>();
+#else
             eventSystem.AddComponent<StandaloneInputModule>();
+#endif
         }
 
         private static void CreateCameraDragArea(Transform parent)
