@@ -26,14 +26,14 @@ namespace WildsOfDracoria.EditorTools
             SetSerializedField(professionUI, "professionText", text);
             panel.SetActive(false);
 
-            var manager = Object.FindObjectOfType<ProfessionManager>();
+            var manager = Object.FindAnyObjectByType<ProfessionManager>();
             manager?.RegisterUI(professionUI);
             Selection.activeObject = panel;
         }
 
         private static void EnsureProfessionManager()
         {
-            var manager = Object.FindObjectOfType<ProfessionManager>();
+            var manager = Object.FindAnyObjectByType<ProfessionManager>();
             if (manager != null)
             {
                 return;
@@ -50,7 +50,7 @@ namespace WildsOfDracoria.EditorTools
 
         private static Canvas FindOrCreateCanvas()
         {
-            var canvas = Object.FindObjectOfType<Canvas>();
+            var canvas = Object.FindAnyObjectByType<Canvas>();
             if (canvas != null)
             {
                 return canvas;
