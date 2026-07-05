@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using WildsOfDracoria.Contracts;
 using WildsOfDracoria.Data;
 using WildsOfDracoria.Items;
 using WildsOfDracoria.Professions;
@@ -180,6 +181,7 @@ namespace WildsOfDracoria.Crafting
                 foreach (var output in recipe.outputItems)
                 {
                     GameManager.Instance.AddItem(output.itemId, output.quantity);
+                    ContractManager.Instance?.RecordCraftedItem(output.itemId, output.quantity);
                 }
 
                 ProfessionManager.Instance?.AddXP(recipe.requiredProfessionId, recipe.xpReward, $"Crafted {recipe.displayName}.");
