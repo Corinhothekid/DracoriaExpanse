@@ -59,11 +59,12 @@ Current foundation includes:
 8. Profession framework
 9. Crafting framework
 10. Gathering nodes
-11. Visual customization architecture
-12. JSON save/load
-13. Ironhaven starter village
-14. Unity 6.5 compatibility modernization pass
-15. Project standards and technical debt tracking
+11. Contracts and Notice Board
+12. Visual customization architecture
+13. JSON save/load
+14. Ironhaven starter village
+15. Unity 6.5 compatibility modernization pass
+16. Project standards and technical debt tracking
 
 ## What Codex Should Do Next
 
@@ -79,7 +80,7 @@ If no new system is specified, prefer stability, Unity compile fixes, and docume
 
 ### Do Not Add Unless Requested
 
-- New quests
+- New quests beyond the contract foundation
 - Networking
 - Guilds
 - Cities
@@ -120,6 +121,7 @@ Assets/
       Camera/
       CharacterCreation/
       Combat/
+      Contracts/
       Crafting/
       Data/
       Editor/
@@ -152,15 +154,16 @@ Completed foundation:
 9. Gathering nodes
 10. Unity 6.5 compatibility pass
 11. Project standards and technical debt tracker
+12. Contracts and Notice Board
 
 Possible next systems, only when requested:
 
 1. Unity compile/playtest fix pass
-2. Gathering/crafting balance polish
-3. Simple bread and cooking loop polish
-4. Fishing polish
-5. Mining and blacksmithing expansion
-6. Simple contracts/notice board
+2. Contract board usability polish
+3. Gathering/crafting balance polish
+4. Simple bread and cooking loop polish
+5. Fishing polish
+6. Mining and blacksmithing expansion
 7. Homestead stub
 8. Simple boat/ferry stub
 9. Local market stub
