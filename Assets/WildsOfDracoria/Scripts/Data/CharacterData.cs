@@ -4,6 +4,7 @@ using System.Linq;
 using WildsOfDracoria.CharacterCreation;
 using WildsOfDracoria.Contracts;
 using WildsOfDracoria.Items;
+using WildsOfDracoria.Markets;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.Visuals;
 
@@ -39,6 +40,7 @@ namespace WildsOfDracoria.Data
         public List<ProfessionData> professions = new List<ProfessionData>();
         public List<InventoryItem> inventory = new List<InventoryItem>();
         public List<ContractData> contracts = new List<ContractData>();
+        public List<VendorStallData> marketStalls = new List<VendorStallData>();
 
         public static CharacterData CreateDefault()
         {
@@ -47,6 +49,7 @@ namespace WildsOfDracoria.Data
             data.EnsureDefaultProfessions();
             data.NormalizeInventory();
             data.EnsureContracts();
+            data.EnsureMarketStalls();
             data.EnsureStarterGatheringTools();
             data.EnsureVisualProfile();
             return data;
@@ -168,6 +171,7 @@ namespace WildsOfDracoria.Data
                 return;
             }
 
+            inventory.RemoveAll(item => item == null);
             foreach (var item in inventory)
             {
                 item.Normalize();
@@ -182,9 +186,25 @@ namespace WildsOfDracoria.Data
                 return;
             }
 
+            contracts.RemoveAll(contract => contract == null);
             foreach (var contract in contracts)
             {
                 contract.Normalize();
+            }
+        }
+
+        public void EnsureMarketStalls()
+        {
+            if (marketStalls == null)
+            {
+                marketStalls = new List<VendorStallData>();
+                return;
+            }
+
+            marketStalls.RemoveAll(stall => stall == null);
+            foreach (var stall in marketStalls)
+            {
+                stall.Normalize();
             }
         }
 
