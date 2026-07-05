@@ -1,5 +1,6 @@
 using UnityEngine;
 using WildsOfDracoria.Combat;
+using WildsOfDracoria.Inputs;
 
 namespace WildsOfDracoria.Player
 {
@@ -67,16 +68,16 @@ namespace WildsOfDracoria.Player
 
         private void ReadKeyboardInput()
         {
-            var keyboardInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            var keyboardInput = DracoriaInput.GetMoveVector();
             moveInput = keyboardInput.sqrMagnitude > 0.001f ? Vector2.ClampMagnitude(keyboardInput, 1f) : externalMoveInput;
-            runInput = Input.GetKey(KeyCode.LeftShift) || externalRunInput;
+            runInput = DracoriaInput.GetKey(KeyCode.LeftShift) || externalRunInput;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (DracoriaInput.GetKeyDown(KeyCode.Space))
             {
                 Jump();
             }
 
-            if (Input.GetKeyDown(KeyCode.E))
+            if (DracoriaInput.GetKeyDown(KeyCode.E))
             {
                 Interact();
             }
