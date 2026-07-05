@@ -47,39 +47,37 @@ The final game will include:
 
 Do not build the full MMO yet.
 
-Current focus:
+Current foundation includes:
 
 1. Third-person movement
 2. Mobile controls
-3. Character data
-4. Skills
-5. Inventory
-6. Basic fishing
-7. Basic combat
-8. NPC interaction
-9. Save/load
-10. Ironhaven starter village
+3. Character data and character creation
+4. Inventory and item database
+5. Fishing
+6. Combat and enemy AI
+7. NPC interaction
+8. Profession framework
+9. Crafting framework
+10. Gathering nodes
+11. Visual customization architecture
+12. JSON save/load
+13. Ironhaven starter village
+14. Unity 6.5 compatibility modernization pass
+15. Project standards and technical debt tracking
 
 ## What Codex Should Do Next
 
-### Immediate Next System
+Follow the latest user request. Before adding any new system, read:
 
-**System 003: Mobile Controls & Action Bar**
+- `README.md`
+- `Docs/CodexHandoff.md`
+- `Docs/EngineeringStandards.md`
+- `Docs/TechnicalDebt.md`
+- Any relevant bible or system document named by the user
 
-Build only:
+If no new system is specified, prefer stability, Unity compile fixes, and documentation over adding features.
 
-1. Virtual joystick for movement
-2. Camera swipe/drag support
-3. Mobile attack button
-4. Mobile block button
-5. Mobile dodge button
-6. Mobile sprint button
-7. Mobile interact button
-8. Reusable action bar with 6 empty slots
-9. Basic menu buttons for inventory, skills, map, character
-10. Simple notification/XP popup system
-
-### Do Not Add Yet
+### Do Not Add Unless Requested
 
 - New quests
 - Networking
@@ -87,24 +85,26 @@ Build only:
 - Cities
 - Sailing
 - Full economy
-- Full profession system
 - Crown Isles
-- Dynasties beyond basic familyName data
+- Dynasties beyond existing identity/family data
 - AI world simulation
 - Extra features not requested
 
 ## Development Rules
 
-1. Explain the implementation plan before coding.
-2. Keep code modular.
-3. Preserve existing systems unless a change is required for integration.
-4. Do not expand scope without asking.
-5. Support PC testing and mobile touch.
-6. Prefer reusable UI components.
-7. Keep systems data-driven where possible.
-8. Every script should be easy to expand later.
-9. Avoid hardcoding future gameplay assumptions.
-10. After changes, list created/modified files and Unity test steps.
+1. Always check `Docs/EngineeringStandards.md` before coding.
+2. Always update `Docs/TechnicalDebt.md` when leaving known issues, risky shortcuts, or deferred migrations.
+3. Never add new systems during cleanup passes.
+4. Explain the implementation plan before coding when the user asks for it or when the change is substantial.
+5. Keep code modular.
+6. Preserve existing systems unless a change is required for integration or compatibility.
+7. Do not expand scope without asking.
+8. Support PC testing and mobile touch.
+9. Prefer reusable UI components.
+10. Keep systems data-driven where possible.
+11. Every script should be easy to expand later.
+12. Avoid hardcoding future gameplay assumptions.
+13. After changes, list created/modified files and Unity test steps when behavior changed.
 
 ## Project Architecture Target
 
@@ -118,35 +118,54 @@ Assets/
     Scripts/
       AI/
       Camera/
+      CharacterCreation/
       Combat/
+      Crafting/
       Data/
       Editor/
+      Gathering/
+      Input/
       Interaction/
+      Items/
       Player/
       Professions/
       Save/
       Systems/
       UI/
-      World/
+        Mobile/
+      Visuals/
 Docs/
 ```
 
 ## MVP Sequence
 
+Completed foundation:
+
 1. Movement
 2. Combat
 3. Mobile controls and action bar
 4. Profession framework
-5. Fishing polish
-6. Mining
-7. Blacksmithing
-8. Cooking
-9. Simple contracts/notice board
-10. Homestead stub
-11. Simple boat/ferry stub
-12. Local market stub
-13. Dynasty/family UI stub
-14. World manager with time/weather
+5. Item database
+6. Crafting framework
+7. Character creation
+8. Character visual customization architecture
+9. Gathering nodes
+10. Unity 6.5 compatibility pass
+11. Project standards and technical debt tracker
+
+Possible next systems, only when requested:
+
+1. Unity compile/playtest fix pass
+2. Gathering/crafting balance polish
+3. Simple bread and cooking loop polish
+4. Fishing polish
+5. Mining and blacksmithing expansion
+6. Simple contracts/notice board
+7. Homestead stub
+8. Simple boat/ferry stub
+9. Local market stub
+10. Dynasty/family UI stub
+11. World manager with time/weather
 
 ## Long-Term Guardrail
 
