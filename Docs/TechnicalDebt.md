@@ -20,6 +20,26 @@ Why it matters: Package compatibility, active input backend, render pipeline set
 
 Recommended fix: After opening the project in Unity 6.5, commit the package manifest, package lock file, and relevant project settings. Keep generated cache folders out of Git.
 
+### Contract deadlines are data-only
+
+Priority: Medium
+
+Issue: `ContractData` includes `deadlineDays`, but there is no world time/calendar system yet, so contracts do not fail from time passing.
+
+Why it matters: Delivery, business, guild, and kingdom contracts will need time pressure once world time exists.
+
+Recommended fix: Wire contract deadlines into the future time/world manager before adding timed or seasonal contracts.
+
+### Contract reputation is profession-local only
+
+Priority: Low
+
+Issue: Contract rewards can add profession reputation when a profession reward exists, but local town, business, guild, kingdom, and personal reputation tracks do not exist yet.
+
+Why it matters: Contracts are meant to feed broader world identity and civic reputation later.
+
+Recommended fix: When the reputation system is built, route `rewardReputation` through the correct reputation track instead of only profession data.
+
 ### Input System migration is compatibility-layer based
 
 Priority: Medium
@@ -34,7 +54,7 @@ Recommended fix: Add an Input Actions asset later with maps for Gameplay, UI, Co
 
 Priority: Medium
 
-Issue: Items, recipes, professions, race visuals, gathering nodes, weapons, and other prototype content are stored in static registries.
+Issue: Items, recipes, professions, race visuals, gathering nodes, weapons, contracts, and other prototype content are stored in static registries.
 
 Why it matters: Static registries are fast for early iteration, but content authoring, validation, localization, Addressables, and balancing will become difficult as the game grows.
 
@@ -46,7 +66,7 @@ Priority: Medium
 
 Issue: Most UI is generated with uGUI code. This is acceptable for prototype speed, but persistent panels will eventually benefit from UI Toolkit.
 
-Why it matters: Inventory, professions, crafting, character sheet, and future markets will need maintainable layouts, styling, and data binding.
+Why it matters: Inventory, professions, crafting, character sheet, contracts, and future markets will need maintainable layouts, styling, and data binding.
 
 Recommended fix: Keep current UI for the prototype. Later migrate persistent menu panels to UI Toolkit/UXML/USS while evaluating whether combat HUD and touch controls should remain uGUI.
 
@@ -86,7 +106,7 @@ Priority: Medium
 
 Issue: JSON save data currently relies on null guards and normalization rather than a formal save schema version.
 
-Why it matters: As character creation, professions, inventory, visuals, and future dynasty data expand, migrations will need predictable versioning.
+Why it matters: As character creation, professions, inventory, visuals, contracts, and future dynasty data expand, migrations will need predictable versioning.
 
 Recommended fix: Add a `saveVersion` field and migration pipeline before adding account-like, dynasty, estate, or world-state data.
 
@@ -96,7 +116,7 @@ Priority: Medium
 
 Issue: There are no Edit Mode or Play Mode smoke tests in the repository.
 
-Why it matters: Registries, save/load normalization, item IDs, recipes, profession XP, and input compatibility can regress silently.
+Why it matters: Registries, save/load normalization, item IDs, recipes, profession XP, contracts, and input compatibility can regress silently.
 
 Recommended fix: Add Edit Mode tests for data registries and save/load, then Play Mode smoke tests for core scene interactions.
 
