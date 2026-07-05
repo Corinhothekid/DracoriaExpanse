@@ -4,6 +4,7 @@ using WildsOfDracoria.Combat;
 using WildsOfDracoria.Crafting;
 using WildsOfDracoria.Data;
 using WildsOfDracoria.Gathering;
+using WildsOfDracoria.Inputs;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.Save;
 using WildsOfDracoria.UI;
@@ -55,17 +56,17 @@ namespace WildsOfDracoria.Systems
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.I))
+            if (DracoriaInput.GetKeyDown(KeyCode.I))
             {
                 inventoryUI?.Toggle();
             }
 
-            if (Input.GetKeyDown(KeyCode.F5))
+            if (DracoriaInput.GetKeyDown(KeyCode.F5))
             {
                 SaveGame();
             }
 
-            if (Input.GetKeyDown(KeyCode.F9))
+            if (DracoriaInput.GetKeyDown(KeyCode.F9))
             {
                 LoadGame();
             }
@@ -195,10 +196,10 @@ namespace WildsOfDracoria.Systems
         private void ApplyLoadedDataToPlayer()
         {
             var player = GameObject.FindGameObjectWithTag("Player");
-            var vitals = FindObjectOfType<PlayerVitals>();
+            var vitals = Object.FindAnyObjectByType<PlayerVitals>();
             vitals?.ApplyCharacterData(characterData);
 
-            var combat = FindObjectOfType<PlayerCombat>();
+            var combat = Object.FindAnyObjectByType<PlayerCombat>();
             if (combat != null)
             {
                 combat.EquipWeapon(characterData.equippedWeapon);
@@ -215,17 +216,17 @@ namespace WildsOfDracoria.Systems
         {
             if (inventoryUI == null)
             {
-                inventoryUI = FindObjectOfType<InventoryUI>(true);
+                inventoryUI = Object.FindAnyObjectByType<InventoryUI>(FindObjectsInactive.Include);
             }
 
             if (dialogueUI == null)
             {
-                dialogueUI = FindObjectOfType<DialogueUI>(true);
+                dialogueUI = Object.FindAnyObjectByType<DialogueUI>(FindObjectsInactive.Include);
             }
 
             if (characterSheetUI == null)
             {
-                characterSheetUI = FindObjectOfType<CharacterSheetUI>(true) ?? CharacterSheetUIFactory.Create();
+                characterSheetUI = Object.FindAnyObjectByType<CharacterSheetUI>(FindObjectsInactive.Include) ?? CharacterSheetUIFactory.Create();
             }
         }
 
