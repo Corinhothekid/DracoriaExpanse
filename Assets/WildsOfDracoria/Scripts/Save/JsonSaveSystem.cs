@@ -24,6 +24,7 @@ namespace WildsOfDracoria.Save
 
             characterData.EnsureVisualProfile();
             characterData.NormalizeInventory();
+            characterData.EnsureContracts();
             var json = JsonUtility.ToJson(characterData, true);
             File.WriteAllText(SavePath, json);
             Debug.Log($"Saved Wilds of Dracoria character to {SavePath}");
@@ -42,6 +43,7 @@ namespace WildsOfDracoria.Save
             data.EnsureDefaultProfessions();
             data.EnsureVisualProfile();
             data.NormalizeInventory();
+            data.EnsureContracts();
             return data;
         }
     }
