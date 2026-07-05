@@ -23,32 +23,32 @@ namespace WildsOfDracoria.UI.Mobile
         {
             if (playerController == null)
             {
-                playerController = FindObjectOfType<ThirdPersonPlayerController>();
+                playerController = Object.FindAnyObjectByType<ThirdPersonPlayerController>();
             }
 
             if (playerCombat == null)
             {
-                playerCombat = FindObjectOfType<PlayerCombat>();
+                playerCombat = Object.FindAnyObjectByType<PlayerCombat>();
             }
 
             if (inventoryUI == null)
             {
-                inventoryUI = FindObjectOfType<InventoryUI>(true);
+                inventoryUI = Object.FindAnyObjectByType<InventoryUI>(FindObjectsInactive.Include);
             }
 
             if (professionUI == null)
             {
-                professionUI = FindObjectOfType<ProfessionUI>(true);
+                professionUI = Object.FindAnyObjectByType<ProfessionUI>(FindObjectsInactive.Include);
             }
 
             if (characterSheetUI == null)
             {
-                characterSheetUI = FindObjectOfType<CharacterSheetUI>(true);
+                characterSheetUI = Object.FindAnyObjectByType<CharacterSheetUI>(FindObjectsInactive.Include);
             }
 
             if (notificationPopupUI == null)
             {
-                notificationPopupUI = NotificationPopupUI.Instance ?? FindObjectOfType<NotificationPopupUI>(true);
+                notificationPopupUI = NotificationPopupUI.Instance ?? Object.FindAnyObjectByType<NotificationPopupUI>(FindObjectsInactive.Include);
             }
         }
 
