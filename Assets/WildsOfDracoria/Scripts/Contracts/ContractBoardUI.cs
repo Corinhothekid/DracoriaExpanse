@@ -24,6 +24,7 @@ namespace WildsOfDracoria.Contracts
         private IReadOnlyList<ContractData> playerContracts = new List<ContractData>();
         private int selectedAvailableIndex;
         private int selectedPlayerIndex;
+        private bool buttonsBound;
 
         private void Awake()
         {
@@ -32,11 +33,7 @@ namespace WildsOfDracoria.Contracts
                 panel.SetActive(false);
             }
 
-            nextAvailableButton?.onClick.AddListener(SelectNextAvailable);
-            acceptButton?.onClick.AddListener(AcceptSelected);
-            nextAcceptedButton?.onClick.AddListener(SelectNextPlayerContract);
-            completeButton?.onClick.AddListener(CompleteSelected);
-            closeButton?.onClick.AddListener(Close);
+            BindButtons();
         }
 
         private void Start()
@@ -56,6 +53,7 @@ namespace WildsOfDracoria.Contracts
             nextAcceptedButton = nextAccepted;
             completeButton = complete;
             closeButton = close;
+            BindButtons();
         }
 
         public void RegisterManager(ContractManager contractManager)
@@ -116,6 +114,21 @@ namespace WildsOfDracoria.Contracts
             RefreshAvailableText();
             RefreshJournalText();
             RefreshSelectedText();
+        }
+
+        private void BindButtons()
+        {
+            if (buttonsBound || nextAvailableButton == null || acceptButton == null || nextAcceptedButton == null || completeButton == null || closeButton == null)
+            {
+                return;
+            }
+
+            nextAvailableButton.onClick.AddListener(SelectNextAvailable);
+            acceptButton.onClick.AddListener(AcceptSelected);
+            nextAcceptedButton.onClick.AddListener(SelectNextPlayerContract);
+            completeButton.onClick.AddListener(CompleteSelected);
+            closeButton.onClick.AddListener(Close);
+            buttonsBound = true;
         }
 
         private void SelectNextAvailable()
