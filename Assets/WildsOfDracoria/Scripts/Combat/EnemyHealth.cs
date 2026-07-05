@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.Contracts;
 using WildsOfDracoria.Items;
 using WildsOfDracoria.Systems;
 using WildsOfDracoria.UI;
@@ -73,6 +74,7 @@ namespace WildsOfDracoria.Combat
         private void Die()
         {
             GameManager.Instance.DialogueUI?.ShowLine($"Defeated {enemyName}.");
+            ContractManager.Instance?.RecordEnemyDefeated(enemyName);
             var player = Object.FindAnyObjectByType<PlayerCombat>();
             player?.NotifyEnemyDefeated(this);
             gameObject.SetActive(false);
