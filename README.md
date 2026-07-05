@@ -32,13 +32,13 @@ The world does not revolve around the player. It exists with the player, changes
 
 ## Prototype Goal
 
-This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 009: Gathering Nodes**. It proves the foundation for MMO-style movement, interaction, character data, inventory, fishing, combat, mobile input, professions, crafting, visual customization, centralized items, resource gathering, and local save/load.
+This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 011: Contracts & Notice Board**. It proves the foundation for MMO-style movement, interaction, character data, inventory, fishing, combat, mobile input, professions, crafting, visual customization, centralized items, resource gathering, local contracts, and local save/load.
 
 ## Included Systems
 
 - Third-person WASD movement with run and jump
 - Mobile controls and camera swipe support
-- Ironhaven placeholder village, harbor, forge, campfire, and gathering nodes
+- Ironhaven placeholder village, harbor, forge, campfire, notice board, and gathering nodes
 - Character creation and character sheet foundation
 - Modular placeholder character visual customization architecture
 - Central ItemDatabase with item definitions, item types, rarity, stack limits, values, weight, and gameplay flags
@@ -47,6 +47,9 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 - Profession data, registry, manager, save/load, and list UI
 - Crafting framework with forge/campfire recipes
 - Gathering framework with Copper Vein, Oak Tree, and Wheat Patch nodes
+- Contract framework with available, accepted, ready, completed, failed, and abandoned states
+- Starter Ironhaven contracts for fishing, gathering, combat, and crafting
+- Contract Board and Contract Journal UI opened from the Notice Board
 - Node depletion and respawn during play
 - Notification and XP popup foundation
 - Captain Alden dialogue
@@ -73,7 +76,7 @@ PC testing:
 - `Middle Mouse Drag`: Rotate camera
 - `Left Shift`: Sprint
 - `Space`: Jump
-- `E`: Interact and gather
+- `E`: Interact, gather, and open the Notice Board
 - `Left Mouse`: Basic attack
 - `Right Mouse`: Block
 - `Left Alt`: Dodge roll placeholder
@@ -92,7 +95,8 @@ Mobile UI:
 - `USE`: Interact and gather
 - `INV`: Inventory
 - `SKL`: Profession list
-- `MAP`, `CHR`: Placeholder menu buttons / character panel
+- `MAP`: Opens the local Contract Board / journal until a real map exists
+- `CHR`: Character panel
 
 ## Folder Structure
 
@@ -108,6 +112,7 @@ Assets/
       Camera/
       CharacterCreation/
       Combat/
+      Contracts/
       Crafting/
       Data/
       Editor/
@@ -128,8 +133,8 @@ Docs/
 ## Next Steps
 
 1. Run a Unity 6.5 compile/playtest fix pass after opening the project in the Editor.
-2. Add mining/crafting balance polish now that Copper Ore can be gathered.
-3. Add a simple recipe ingredient loop around Wheat and Simple Bread.
-4. Add low-poly/anime-style placeholder art replacements for nodes and characters.
-5. Add quest/contracts later, after the resource loop feels stable.
+2. Polish contract board usability after the first playtest.
+3. Add mining/crafting balance polish now that Copper Ore can be gathered.
+4. Add a simple recipe ingredient loop around Wheat and Simple Bread.
+5. Add low-poly/anime-style placeholder art replacements for nodes and characters.
 6. Add economy, sailing, cities, and networking later.
