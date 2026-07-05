@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.Inputs;
 using WildsOfDracoria.Systems;
 using WildsOfDracoria.UI;
 
@@ -146,14 +147,14 @@ namespace WildsOfDracoria.Combat
 
         private void ReadCombatInput()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (DracoriaInput.GetMouseButtonDown(0))
             {
                 BasicAttack();
             }
 
-            IsBlocking = Input.GetMouseButton(1) || externalBlockInput;
+            IsBlocking = DracoriaInput.GetMouseButton(1) || externalBlockInput;
 
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            if (DracoriaInput.GetKeyDown(KeyCode.LeftAlt))
             {
                 Dodge();
             }
