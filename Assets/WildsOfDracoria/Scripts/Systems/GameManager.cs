@@ -1,6 +1,7 @@
 using UnityEngine;
 using WildsOfDracoria.CharacterCreation;
 using WildsOfDracoria.Combat;
+using WildsOfDracoria.Contracts;
 using WildsOfDracoria.Crafting;
 using WildsOfDracoria.Data;
 using WildsOfDracoria.Gathering;
@@ -41,6 +42,7 @@ namespace WildsOfDracoria.Systems
             characterData.NormalizeInventory();
             EnsureProfessionManager();
             EnsureCraftingManager();
+            EnsureContractManager();
             EnsureCharacterCreationStartup();
             EnsureGatheringNodeBootstrap();
         }
@@ -49,9 +51,9 @@ namespace WildsOfDracoria.Systems
         {
             FindUIIfNeeded();
             ProfessionManager.Instance?.RefreshFromCharacterData();
+            ContractManager.Instance?.RefreshAllProgress();
             ApplyLoadedDataToPlayer();
-            RefreshInventoryUI();
-            RefreshCharacterSheetUI();
+            RefreshPlayerUI();
         }
 
         private void Update()
@@ -84,10 +86,11 @@ namespace WildsOfDracoria.Systems
             characterData.EnsureDefaultProfessions();
             characterData.EnsureVisualProfile();
             characterData.NormalizeInventory();
+            characterData.EnsureContracts();
             ProfessionManager.Instance?.RefreshFromCharacterData();
+            ContractManager.Instance?.RefreshAllProgress();
             ApplyLoadedDataToPlayer();
-            RefreshInventoryUI();
-            RefreshCharacterSheetUI();
+            RefreshPlayerUI();
 
             if (saveImmediately)
             {
@@ -103,6 +106,7 @@ namespace WildsOfDracoria.Systems
         public void AddItem(string itemId, int quantity = 1)
         {
             characterData.AddInventoryItem(itemId, quantity);
+            ContractManager.Instance?.RefreshProgressForInventoryChange();
             RefreshInventoryUI();
         }
 
@@ -119,6 +123,7 @@ namespace WildsOfDracoria.Systems
         public void SaveGame()
         {
             characterData.EnsureVisualProfile();
+            characterData.EnsureContracts();
             JsonSaveSystem.Save(characterData);
             dialogueUI?.ShowLine("Progress saved.");
         }
@@ -153,6 +158,12 @@ namespace WildsOfDracoria.Systems
             RefreshCharacterSheetUI();
         }
 
+        public void RefreshPlayerUI()
+        {
+            RefreshInventoryUI();
+            RefreshCharacterSheetUI();
+        }
+
         private void EnsureProfessionManager()
         {
             if (ProfessionManager.Instance != null || GetComponent<ProfessionManager>() != null)
@@ -171,6 +182,16 @@ namespace WildsOfDracoria.Systems
             }
 
             gameObject.AddComponent<CraftingManager>();
+        }
+
+        private void EnsureContractManager()
+        {
+            if (ContractManager.Instance != null || GetComponent<ContractManager>() != null)
+            {
+                return;
+            }
+
+            gameObject.AddComponent<ContractManager>();
         }
 
         private void EnsureCharacterCreationStartup()
