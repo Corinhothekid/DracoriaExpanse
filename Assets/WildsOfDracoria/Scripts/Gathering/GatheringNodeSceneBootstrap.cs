@@ -8,7 +8,7 @@ namespace WildsOfDracoria.Gathering
 
         private void Start()
         {
-            if (!createIfMissing || FindObjectOfType<GatheringNode>() != null)
+            if (!createIfMissing || Object.FindAnyObjectByType<GatheringNode>() != null)
             {
                 return;
             }
