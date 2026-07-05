@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WildsOfDracoria.CharacterCreation;
+using WildsOfDracoria.Contracts;
 using WildsOfDracoria.Items;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.Visuals;
@@ -37,6 +38,7 @@ namespace WildsOfDracoria.Data
         public List<SkillData> skills = new List<SkillData>();
         public List<ProfessionData> professions = new List<ProfessionData>();
         public List<InventoryItem> inventory = new List<InventoryItem>();
+        public List<ContractData> contracts = new List<ContractData>();
 
         public static CharacterData CreateDefault()
         {
@@ -44,6 +46,7 @@ namespace WildsOfDracoria.Data
             data.EnsureDefaultSkills();
             data.EnsureDefaultProfessions();
             data.NormalizeInventory();
+            data.EnsureContracts();
             data.EnsureStarterGatheringTools();
             data.EnsureVisualProfile();
             return data;
@@ -168,6 +171,20 @@ namespace WildsOfDracoria.Data
             foreach (var item in inventory)
             {
                 item.Normalize();
+            }
+        }
+
+        public void EnsureContracts()
+        {
+            if (contracts == null)
+            {
+                contracts = new List<ContractData>();
+                return;
+            }
+
+            foreach (var contract in contracts)
+            {
+                contract.Normalize();
             }
         }
 
