@@ -10,7 +10,7 @@ namespace WildsOfDracoria.UI.Mobile
         {
             if (router == null)
             {
-                router = FindObjectOfType<MobileControlsRouter>();
+                router = Object.FindAnyObjectByType<MobileControlsRouter>();
             }
 
             router?.ShowPrototypeNotice("Mobile controls ready");
