@@ -10,7 +10,7 @@ Style target: **Classic WoW-inspired stylized fantasy**, with RuneScape-like lif
 
 Dracoria Expanse is a living fantasy MMO where players do not simply level up. They build lives, families, professions, communities, cities, trade routes, ships, guilds, and histories.
 
-Players can become warriors, fishermen, blacksmiths, merchants, navigators, shipwrights, mayors, pirates, caravan guards, farmers, cooks, caravan guards, founders of family dynasties, or anything in between. Every profession should have its own endgame, adventure, bosses, reputation, and legendary moments.
+Players can become warriors, fishermen, blacksmiths, merchants, navigators, shipwrights, mayors, pirates, caravan guards, farmers, cooks, founders of family dynasties, or anything in between. Every profession should have its own endgame, adventure, bosses, reputation, and legendary moments.
 
 The world does not revolve around the player. It exists with the player, changes over time, and remembers what players leave behind.
 
