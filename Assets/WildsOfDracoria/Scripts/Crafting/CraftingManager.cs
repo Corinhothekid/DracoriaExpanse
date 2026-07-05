@@ -29,7 +29,7 @@ namespace WildsOfDracoria.Crafting
         {
             if (craftingUI == null)
             {
-                craftingUI = FindObjectOfType<CraftingUI>(true);
+                craftingUI = Object.FindAnyObjectByType<CraftingUI>(FindObjectsInactive.Include);
             }
 
             craftingUI?.RegisterManager(this);
@@ -75,7 +75,7 @@ namespace WildsOfDracoria.Crafting
             var stationRecipes = GetRecipesForStation(stationType);
             if (craftingUI == null)
             {
-                craftingUI = FindObjectOfType<CraftingUI>(true);
+                craftingUI = Object.FindAnyObjectByType<CraftingUI>(FindObjectsInactive.Include);
             }
 
             if (craftingUI != null)
