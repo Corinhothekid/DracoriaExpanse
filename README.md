@@ -24,6 +24,9 @@ The world does not revolve around the player. It exists with the player, changes
 - [World Bible](Docs/WorldBible.md)
 - [Systems Bible](Docs/SystemsBible.md)
 - [Codex Handoff](Docs/CodexHandoff.md)
+- [Engineering Standards](Docs/EngineeringStandards.md)
+- [Technical Debt Tracker](Docs/TechnicalDebt.md)
+- [Unity 6.5 Compatibility Report](Docs/Unity65CompatibilityReport.md)
 - [Art Direction](Docs/ArtDirection.md)
 - [Prototype Setup](Docs/PrototypeSetup.md)
 
@@ -109,6 +112,7 @@ Assets/
       Data/
       Editor/
       Gathering/
+      Input/
       Interaction/
       Items/
       Player/
@@ -123,8 +127,9 @@ Docs/
 
 ## Next Steps
 
-1. Add mining/crafting balance polish now that Copper Ore can be gathered.
-2. Add a simple recipe ingredient loop around Wheat and Simple Bread.
-3. Add low-poly/anime-style placeholder art replacements for nodes and characters.
-4. Add quest/contracts later, after the resource loop feels stable.
-5. Add economy, sailing, cities, and networking later.
+1. Run a Unity 6.5 compile/playtest fix pass after opening the project in the Editor.
+2. Add mining/crafting balance polish now that Copper Ore can be gathered.
+3. Add a simple recipe ingredient loop around Wheat and Simple Bread.
+4. Add low-poly/anime-style placeholder art replacements for nodes and characters.
+5. Add quest/contracts later, after the resource loop feels stable.
+6. Add economy, sailing, cities, and networking later.
