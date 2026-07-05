@@ -1,4 +1,5 @@
 using UnityEngine;
+using WildsOfDracoria.Inputs;
 
 namespace WildsOfDracoria.CameraRig
 {
@@ -27,9 +28,9 @@ namespace WildsOfDracoria.CameraRig
 
         private void Update()
         {
-            if (Input.GetMouseButton(2))
+            if (DracoriaInput.GetMouseButton(2))
             {
-                AddLookInput(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * mouseLookSensitivity);
+                AddLookInput(new Vector2(DracoriaInput.GetAxis("Mouse X"), DracoriaInput.GetAxis("Mouse Y")) * mouseLookSensitivity);
             }
         }
 
