@@ -41,7 +41,7 @@ namespace WildsOfDracoria.EditorTools
 
         private static void ClearScene()
         {
-            var objects = Object.FindObjectsOfType<GameObject>();
+            var objects = Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include);
             foreach (var sceneObject in objects)
             {
                 Object.DestroyImmediate(sceneObject);
