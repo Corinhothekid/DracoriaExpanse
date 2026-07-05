@@ -1,5 +1,6 @@
 using UnityEngine;
 using WildsOfDracoria.Combat;
+using WildsOfDracoria.Contracts;
 using WildsOfDracoria.Player;
 using WildsOfDracoria.Professions;
 using WildsOfDracoria.UI;
@@ -114,7 +115,14 @@ namespace WildsOfDracoria.UI.Mobile
                     professionUI?.Toggle();
                     break;
                 case MobileControlAction.Map:
-                    ShowPrototypeNotice("Map placeholder");
+                    if (ContractManager.Instance != null)
+                    {
+                        ContractManager.Instance.OpenBoard();
+                    }
+                    else
+                    {
+                        ShowPrototypeNotice("Map placeholder");
+                    }
                     break;
                 case MobileControlAction.Character:
                     characterSheetUI?.Toggle();
