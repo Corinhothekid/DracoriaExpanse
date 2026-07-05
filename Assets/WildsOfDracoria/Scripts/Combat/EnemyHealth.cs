@@ -73,7 +73,7 @@ namespace WildsOfDracoria.Combat
         private void Die()
         {
             GameManager.Instance.DialogueUI?.ShowLine($"Defeated {enemyName}.");
-            var player = FindObjectOfType<PlayerCombat>();
+            var player = Object.FindAnyObjectByType<PlayerCombat>();
             player?.NotifyEnemyDefeated(this);
             gameObject.SetActive(false);
         }
