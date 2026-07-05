@@ -10,7 +10,7 @@ Style target: **Classic WoW-inspired stylized fantasy**, with RuneScape-like lif
 
 Dracoria Expanse is a living fantasy MMO where players do not simply level up. They build lives, families, professions, communities, cities, trade routes, ships, guilds, and histories.
 
-Players can become warriors, fishermen, blacksmiths, merchants, navigators, shipwrights, mayors, pirates, caravan guards, farmers, explorers, or anything in between. Every profession should have its own endgame, adventure, bosses, reputation, and legendary moments.
+Players can become warriors, fishermen, blacksmiths, merchants, navigators, shipwrights, mayors, pirates, caravan guards, farmers, cooks, caravan guards, founders of family dynasties, or anything in between. Every profession should have its own endgame, adventure, bosses, reputation, and legendary moments.
 
 The world does not revolve around the player. It exists with the player, changes over time, and remembers what players leave behind.
 
@@ -32,13 +32,13 @@ The world does not revolve around the player. It exists with the player, changes
 
 ## Prototype Goal
 
-This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 011: Contracts & Notice Board**. It proves the foundation for MMO-style movement, interaction, character data, inventory, fishing, combat, mobile input, professions, crafting, visual customization, centralized items, resource gathering, local contracts, and local save/load.
+This prototype creates a small third-person playable scene called **Ironhaven** and now includes **System 012: Local Market & Vendor Stall Foundation**. It proves the foundation for MMO-style movement, interaction, character data, inventory, fishing, combat, mobile input, professions, crafting, visual customization, centralized items, resource gathering, local contracts, local vendor stalls, and local save/load.
 
 ## Included Systems
 
 - Third-person WASD movement with run and jump
 - Mobile controls and camera swipe support
-- Ironhaven placeholder village, harbor, forge, campfire, notice board, and gathering nodes
+- Ironhaven placeholder village, harbor, forge, campfire, notice board, gathering nodes, and market stalls
 - Character creation and character sheet foundation
 - Modular placeholder character visual customization architecture
 - Central ItemDatabase with item definitions, item types, rarity, stack limits, values, weight, and gameplay flags
@@ -50,6 +50,8 @@ This prototype creates a small third-person playable scene called **Ironhaven** 
 - Contract framework with available, accepted, ready, completed, failed, and abandoned states
 - Starter Ironhaven contracts for fishing, gathering, combat, and crafting
 - Contract Board and Contract Journal UI opened from the Notice Board
+- Local market foundation with Ironhaven vendor stalls, listings, buying, stall gold balances, and saved stock state
+- Player-owned stall data stubs for future market passes
 - Node depletion and respawn during play
 - Notification and XP popup foundation
 - Captain Alden dialogue
@@ -76,7 +78,7 @@ PC testing:
 - `Middle Mouse Drag`: Rotate camera
 - `Left Shift`: Sprint
 - `Space`: Jump
-- `E`: Interact, gather, and open the Notice Board
+- `E`: Interact, gather, open the Notice Board, and shop at vendor stalls
 - `Left Mouse`: Basic attack
 - `Right Mouse`: Block
 - `Left Alt`: Dodge roll placeholder
@@ -92,7 +94,7 @@ Mobile UI:
 - `BLK`: Hold block
 - `DOD`: Dodge
 - `RUN`: Hold sprint
-- `USE`: Interact and gather
+- `USE`: Interact, gather, and shop
 - `INV`: Inventory
 - `SKL`: Profession list
 - `MAP`: Opens the local Contract Board / journal until a real map exists
@@ -120,6 +122,7 @@ Assets/
       Input/
       Interaction/
       Items/
+      Markets/
       Player/
       Professions/
       Save/
@@ -133,8 +136,8 @@ Docs/
 ## Next Steps
 
 1. Run a Unity 6.5 compile/playtest fix pass after opening the project in the Editor.
-2. Polish contract board usability after the first playtest.
+2. Polish contract and market board usability after the first playtest.
 3. Add mining/crafting balance polish now that Copper Ore can be gathered.
 4. Add a simple recipe ingredient loop around Wheat and Simple Bread.
-5. Add low-poly/anime-style placeholder art replacements for nodes and characters.
-6. Add economy, sailing, cities, and networking later.
+5. Add low-poly/anime-style placeholder art replacements for nodes, stalls, and characters.
+6. Add player selling, stall rent, economy simulation, sailing, cities, and networking later.
