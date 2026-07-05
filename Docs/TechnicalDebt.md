@@ -20,6 +20,26 @@ Why it matters: Package compatibility, active input backend, render pipeline set
 
 Recommended fix: After opening the project in Unity 6.5, commit the package manifest, package lock file, and relevant project settings. Keep generated cache folders out of Git.
 
+### Local market selling is vendor-buy only
+
+Priority: Medium
+
+Issue: The market foundation supports local vendor stall data, listings, buying, saved stock state, stall gold balances, and player-owned stall stubs, but player selling is intentionally not implemented yet.
+
+Why it matters: Player-owned stalls need confirmation UI, pricing rules, listing limits, item removal rules, and local economy balancing before real player-to-player style trade exists.
+
+Recommended fix: Build a focused player-owned stall selling pass after vendor buying has been playtested.
+
+### Market economy simulation is not active yet
+
+Priority: Medium
+
+Issue: Stall prices and quantities are static prototype data aside from purchases reducing stock. There are no restocks, taxes, stall rent, local demand curves, sale history, or town economy effects.
+
+Why it matters: Dracoria's economy should eventually make local markets feel alive without becoming a global auction house.
+
+Recommended fix: Add local restock rules, sales history, and simple town-level supply/demand only after the prototype shop loop feels good.
+
 ### Contract deadlines are data-only
 
 Priority: Medium
@@ -54,7 +74,7 @@ Recommended fix: Add an Input Actions asset later with maps for Gameplay, UI, Co
 
 Priority: Medium
 
-Issue: Items, recipes, professions, race visuals, gathering nodes, weapons, contracts, and other prototype content are stored in static registries.
+Issue: Items, recipes, professions, race visuals, gathering nodes, weapons, contracts, market stalls, and other prototype content are stored in static registries.
 
 Why it matters: Static registries are fast for early iteration, but content authoring, validation, localization, Addressables, and balancing will become difficult as the game grows.
 
@@ -66,7 +86,7 @@ Priority: Medium
 
 Issue: Most UI is generated with uGUI code. This is acceptable for prototype speed, but persistent panels will eventually benefit from UI Toolkit.
 
-Why it matters: Inventory, professions, crafting, character sheet, contracts, and future markets will need maintainable layouts, styling, and data binding.
+Why it matters: Inventory, professions, crafting, character sheet, contracts, markets, and future economy panels will need maintainable layouts, styling, and data binding.
 
 Recommended fix: Keep current UI for the prototype. Later migrate persistent menu panels to UI Toolkit/UXML/USS while evaluating whether combat HUD and touch controls should remain uGUI.
 
@@ -84,7 +104,7 @@ Recommended fix: Add simple object pools before larger combat encounters, dense 
 
 Priority: Low
 
-Issue: Prototype scene builders and gathering bootstrap create materials at runtime/editor time from code.
+Issue: Prototype scene builders, gathering bootstrap, and market stall bootstrap create materials at runtime/editor time from code.
 
 Why it matters: Fine for placeholders, but production art should use shared assets for consistency, memory, batching, and Addressables readiness.
 
@@ -106,7 +126,7 @@ Priority: Medium
 
 Issue: JSON save data currently relies on null guards and normalization rather than a formal save schema version.
 
-Why it matters: As character creation, professions, inventory, visuals, contracts, and future dynasty data expand, migrations will need predictable versioning.
+Why it matters: As character creation, professions, inventory, visuals, contracts, markets, and future dynasty data expand, migrations will need predictable versioning.
 
 Recommended fix: Add a `saveVersion` field and migration pipeline before adding account-like, dynasty, estate, or world-state data.
 
@@ -116,7 +136,7 @@ Priority: Medium
 
 Issue: There are no Edit Mode or Play Mode smoke tests in the repository.
 
-Why it matters: Registries, save/load normalization, item IDs, recipes, profession XP, contracts, and input compatibility can regress silently.
+Why it matters: Registries, save/load normalization, item IDs, recipes, profession XP, contracts, market listings, and input compatibility can regress silently.
 
 Recommended fix: Add Edit Mode tests for data registries and save/load, then Play Mode smoke tests for core scene interactions.
 
