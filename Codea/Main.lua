@@ -1,4 +1,4 @@
--- DRACORIA EVOLVED | BUILD 017 | DAWNHAVEN WORLD
+-- DRACORIA EVOLVED | BUILD 018 | TEXTURED DAWNHAVEN
 -- Codea Modern | 1 ground tile = 2 metres
 -- TydusAtlas: 384x1792, 4 columns x 16 rows, each frame 96x112.
 -- Import into Codea Documents assets as TydusAtlas.
@@ -9,6 +9,9 @@ local hero={x=0,y=-5,dir=1,walk=0,attack=0}
 local joy=nil
 local frames=nil
 local atlasError=nil
+local cobble=nil
+local cobbleError=nil
+local cobbleTiles={}
 local camera={x=0,y=0}
 local buildings={}
 local trees={}
@@ -99,10 +102,41 @@ local function loadAtlas()
         end
     end
 end
+local function loadCobble()
+    local ok,img=pcall(function() return readImage(asset.Cobblestone) end)
+    if not ok or not img then
+        cobbleError="Cobblestone missing: using stone-color fallback"
+        return
+    end
+    cobble=img
+    -- Pre-render a diamond-shaped tile using the actual imported texture.
+    -- Source texture is sampled at a repeatable scale for every map tile.
+    -- Masking outside the diamond is achieved using transparent pixels.
+    local cw,ch=48,24
+    for variant=1,4 do
+        local tileImg=image(cw,ch)
+        local offsetX=((variant-1)%2)*17
+        local offsetY=math.floor((variant-1)/2)*11
+        for yy=0,ch-1 do
+            local dy=math.abs((yy+.5-ch/2)/(ch/2))
+            local span=(1-dy)*cw/2
+            for xx=0,cw-1 do
+                if math.abs(xx+.5-cw/2)<=span then
+                    local u=(xx+offsetX)%img.width
+                    local v=(yy+offsetY)%img.height
+                    local r,g,b,a=img:get(u,v)
+                    tileImg:set(xx,yy,r,g,b,a or 255)
+                end
+            end
+        end
+        cobbleTiles[variant]=tileImg
+    end
+end
 function setup()
     viewer.mode=FULLSCREEN
     generateWorld()
     loadAtlas()
+    loadCobble()
 end
 local function fill(c) style.fill(c[1],c[2],c[3]) end
 local function diamond(px,py,c)
@@ -120,8 +154,16 @@ local function ground(x,y,px,py)
     elseif r then c=noise>.5 and {142,130,113} or {136,124,108}
     elseif city then c=noise>.5 and {106,143,105} or {100,136,99}
     else c=noise>.5 and {73,125,83} or {69,119,78} end
-    diamond(px,py,c)
-    if city and not r and rnd(x,y,10)>.96 then
+    local plaza=math.abs(x)<=7 and math.abs(y)<=7
+    if (r or plaza) and cobbleTiles[1] then
+        -- One 48x24 diamond image per ground tile, same footprint as Build 017.
+        local variant=math.floor(rnd(x,y,17)*4)+1
+        style.noTint()
+        sprite(cobbleTiles[variant],px,py,TILE_X,TILE_Y)
+    else
+        diamond(px,py,c)
+    end
+    if city and not r and not plaza and rnd(x,y,10)>.96 then
         style.fill(118,156,114,160);ellipse(px,py,6,3)
     end
 end
@@ -240,10 +282,14 @@ local function drawUI()
     style.fill(16,26,43,235);rect(0,HEIGHT-91,WIDTH,91)
     style.fill(242,209,144);fontSize(20);text("DAWNHAVEN",WIDTH/2,HEIGHT-25)
     style.fill(221);fontSize(13)
-    text("DRACORIA EVOLVED  •  BUILD 017",WIDTH/2,HEIGHT-61)
+    text("DRACORIA EVOLVED  •  BUILD 018",WIDTH/2,HEIGHT-61)
     if atlasError then
         style.fill(150,44,50,235);rect(8,HEIGHT-142,WIDTH-16,40)
         style.fill(255);fontSize(13);text(atlasError,WIDTH/2,HEIGHT-122)
+    end
+    if cobbleError then
+        style.fill(255,215,135);fontSize(12)
+        text(cobbleError,WIDTH/2,HEIGHT-158)
     end
     local jx,jy=joy and joy.x or 83,joy and joy.y or 104
     style.fill(30,53,81,175);ellipse(jx,jy,115,115)
