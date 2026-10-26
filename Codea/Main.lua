@@ -1,155 +1,119 @@
--- DRACORIA EVOLVED | BUILD 015
--- Codea Modern. No external assets required.
--- Temporary procedural preview. Real sprite atlases are the next milestone.
-local mode="creator"
-local hero={x=0,y=0,dir=0,walk=0}
-local appearance={race=1,body=1,face=1,hair=1,hairColor=1,skin=2,eyes=1,outfit=1}
-local cats={
- {"RACE","race",{"Human","Elf","Dwarf","Draconian"}},
- {"BODY","body",{"Balanced","Athletic","Heavy","Slim"}},
- {"FACE","face",{"Heroic","Youthful","Rugged","Sharp"}},
- {"HAIR","hair",{"Wolf Cut","Short","Long","Spiky"}},
- {"HAIR COLOR","hairColor",{"Silver","Black","Brown","Blonde"}},
- {"SKIN","skin",{"Fair","Tan","Brown","Deep"}},
- {"EYES","eyes",{"Blue","Green","Amber","Violet"}},
- {"OUTFIT","outfit",{"Knight","Rogue","Mage","Adventurer"}}
-}
-local selected=1
-local facing=0
+-- DRACORIA EVOLVED | BUILD 016 | Tydus Walk + Basic Attack
+-- Import TydusAtlas.png into Codea Documents assets before running.
+-- Atlas: 384x1792; 4 columns x 16 rows; 96x112 cells.
+-- Rows 0-7 walking; rows 8-15 attacking (TOP to BOTTOM).
+-- Direction order: down, down-left, left, up-left, up, up-right, right, down-right.
+
+local hero={x=0,y=0,dir=1,walk=0,attack=0}
 local joy=nil
-local skins={{244,207,173},{215,163,120},{157,101,72},{92,58,48}}
-local hairs={{224,231,239},{38,36,47},{120,76,50},{222,183,91}}
-local outfits={{39,77,150},{67,76,79},{100,60,145},{109,85,62}}
-local eyes={{65,157,230},{77,181,112},{220,159,55},{165,105,220}}
-local function color3(c,a) style.fill(c[1],c[2],c[3],a or 255) end
-local function box(x,y,w,h,c) color3(c) rect(x,y,w,h) end
-local function hit(t,x,y,w,h) return t.x>=x and t.x<=x+w and t.y>=y and t.y<=y+h end
-local function button(s,x,y,w,h,active)
- box(x,y,w,h,active and {59,99,155} or {29,42,63})
- style.fill(255) text(s,x+w/2,y+h/2)
-end
+local frames={}
+local missing=false
+local directions={7,8,1,2,3,4,5,6} -- screen-angle sectors E, NE, N, NW, W, SW, S, SE
+local cellW,cellH=96,112
 local function iso(x,y) return (x-y)*40,(x+y)*20 end
--- Single renderer used by BOTH creator and game.
-local function drawHero(cx,feet,scale,dir,walking)
- local skin=skins[appearance.skin]
- local hair=hairs[appearance.hairColor]
- local armor=outfits[appearance.outfit]
- local eye=eyes[appearance.eyes]
- local back=(dir==3 or dir==4 or dir==5)
- local side=(dir==2 or dir==6)
- local dwarf=(appearance.race==3)
- local shift=dwarf and -4 or 0
- local stride=walking and math.floor(math.sin(hero.walk*11)*2) or 0
- local bw=appearance.body==3 and 17 or (appearance.body==4 and 10 or 13)
- local function p(x,y,w,h,c) box(cx+(x-16)*scale,feet+(y+shift)*scale,w*scale,h*scale,c) end
- style.fill(0,0,0,75) ellipse(cx,feet,21*scale,6*scale)
- p(10,2+stride,5,13,{39,42,57});p(18,2-stride,5,13,{39,42,57})
- p(9,2+stride,7,5,{64,49,47});p(18,2-stride,7,5,{64,49,47})
- if appearance.outfit==1 or appearance.outfit==3 then p(7,12,18,20,{28,42,86}) end
- p(16-bw/2,15,bw,17,armor)
- p(14,17,4,12,appearance.outfit==1 and {226,181,79} or {135,135,145})
- p(16-bw/2-4,18+stride,4,12,armor);p(16+bw/2,18-stride,4,12,armor)
- p(16-bw/2-4,15+stride,4,4,skin);p(16+bw/2,15-stride,4,4,skin)
- p(14,31,5,4,skin);p(9,33,14,12,skin)
- if appearance.race==2 then p(6,38,3,5,skin);p(23,38,3,5,skin) end
- if appearance.race==4 then p(7,43,3,7,{190,160,85});p(22,43,3,7,{190,160,85}) end
- if not back then
-  if side then p(dir==2 and 19 or 11,39,2,2,eye)
-  else p(12,39,2,2,eye);p(19,39,2,2,eye) end
- end
- p(8,43,16,5,hair)
- if appearance.hair==1 then
-  p(7,38,4,10,hair);p(21,38,4,10,hair);p(8,31,4,8,hair);p(20,31,4,8,hair)
- elseif appearance.hair==2 then p(8,41,3,5,hair)
- elseif appearance.hair==3 then p(7,28,4,19,hair);p(21,28,4,19,hair)
- else p(10,46,3,6,hair);p(16,46,3,8,hair);p(22,46,3,6,hair) end
- if back then p(9,36,14,9,hair) end
+local function tile(x,y,cx,cy)
+    local px,py=iso(x,y)
+    px=px-cx+WIDTH/2; py=py-cy+HEIGHT*.54
+    local path=(math.abs(x)<2 or math.abs(y)<2)
+    if path then style.fill(122,111,95) else
+        if (x+y)%2==0 then style.fill(65,121,75) else style.fill(72,133,81) end
+    end
+    style.noStroke()
+    triangle(px,py+20,px+40,py,px,py-20)
+    triangle(px,py+20,px,py-20,px-40,py)
 end
-local function drawCreator()
- background(15,22,36)
- style.fill(239,207,136) text("DRACORIA EVOLVED",WIDTH/2,HEIGHT-36)
- style.fill(255) text("CREATE YOUR HERO",WIDTH/2,HEIGHT-69)
- local bottom=HEIGHT*.45
- box(16,bottom,WIDTH-32,HEIGHT*.39,{30,43,62})
- style.fill(104,109,122) ellipse(WIDTH/2,bottom+44,154,36)
- local scale=math.min(3.1,HEIGHT*.39/69)
- drawHero(WIDTH/2,bottom+45,scale,facing,false)
- button("< TURN",25,bottom+8,90,40,false)
- button("TURN >",WIDTH-115,bottom+8,90,40,false)
- local c=cats[selected]
- style.fill(239,207,136) text(c[1],WIDTH/2,bottom-25)
- local y=bottom-93;local gap=5;local w=(WIDTH-36-3*gap)/4
- for i=1,4 do button(c[3][i],18+(i-1)*(w+gap),y,w,48,appearance[c[2]]==i) end
- button("PREVIOUS",18,y-61,(WIDTH-42)/2,45,false)
- button("NEXT",WIDTH/2+3,y-61,(WIDTH-42)/2,45,false)
- style.fill(180,190,210) text(selected.." / "..#cats,WIDTH/2,y-87)
- button("ENTER WORLD",20,20,WIDTH-40,60,true)
-end
-local function drawGame(dt)
- background(49,100,71)
- local mx,my=0,0
- if joy then mx,my=joy.dx,joy.dy end
- local magnitude=math.sqrt(mx*mx+my*my)
- local moving=magnitude>.08
- if moving then
-  hero.x=hero.x+mx*dt*3
-  hero.y=hero.y+my*dt*3
-  hero.walk=hero.walk+dt
-  local sx,sy=iso(mx,my)
-  local angle=math.atan(sy,sx)
-  hero.dir=math.floor((angle+math.pi/2+math.pi/8)/(math.pi/4))%8
- end
- local camx,camy=iso(hero.x,hero.y)
- local gx,gy=math.floor(hero.x),math.floor(hero.y)
- for y=gy-13,gy+13 do for x=gx-13,gx+13 do
-  local sx,sy=iso(x,y)
-  sx=WIDTH/2+sx-camx;sy=HEIGHT*.53+sy-camy
-  local road=math.abs(x)<=1 or math.abs(y)<=1
-  local c=road and {117,107,93} or (((x+y)%2==0) and {64,122,75} or {73,136,83})
-  style.stroke(c[1],c[2],c[3]);style.strokeWidth(20)
-  line(sx-20,sy,sx,sy+10);line(sx,sy+10,sx+20,sy)
-  line(sx+20,sy,sx,sy-10);line(sx,sy-10,sx-20,sy)
- end end
- drawHero(WIDTH/2,HEIGHT*.53,1.7,hero.dir,moving)
- box(0,HEIGHT-90,WIDTH,90,{17,28,44})
- style.fill(255) text("TYDUS  |  DRACORIA",120,HEIGHT-38)
- button("EDIT",WIDTH-95,HEIGHT-73,78,45,false)
- local jx,jy=joy and joy.x or 80,joy and joy.y or 100
- style.fill(36,65,88,175) ellipse(jx,jy,108,108)
- style.fill(125,172,205) ellipse(jx+(joy and joy.sx*34 or 0),jy+(joy and joy.sy*34 or 0),45,45)
+local function loadSprites()
+    local ok,img=pcall(function() return readImage(asset.documents.TydusAtlas) end)
+    if not ok or not img then missing=true; return end
+    if img.width~=384 or img.height~=1792 then
+        print('TydusAtlas must be 384 x 1792 pixels') missing=true; return
+    end
+    for action=1,2 do
+        frames[action]={}
+        for dir=1,8 do
+            frames[action][dir]={}
+            local row=(action-1)*8+(dir-1)
+            for f=1,4 do
+                frames[action][dir][f]=img:copy((f-1)*cellW,(15-row)*cellH,cellW,cellH)
+            end
+        end
+    end
 end
 function setup()
- viewer.mode=FULLSCREEN
- mode="creator"
+    viewer.mode=FULLSCREEN
+    loadSprites()
+end
+local function update(dt)
+    if hero.attack>0 then hero.attack=math.max(0,hero.attack-dt) end
+    if not joy or hero.attack>0 then return end
+    local sx,sy=joy.dx,joy.dy
+    local mag=math.sqrt(sx*sx+sy*sy)
+    if mag<.08 then return end
+    local speed=2.7
+    local wx=(sx/40+sy/20)*.5
+    local wy=(sy/20-sx/40)*.5
+    local wm=math.sqrt(wx*wx+wy*wy)
+    if wm>0 then hero.x=hero.x+wx/wm*speed*dt;hero.y=hero.y+wy/wm*speed*dt end
+    hero.walk=hero.walk+dt
+    local a=math.atan(sy,sx)
+    local sector=math.floor((a+math.pi/8)/(math.pi/4))%8+1
+    hero.dir=directions[sector]
+end
+local function drawHero()
+    local x,y=WIDTH/2,HEIGHT*.54
+    style.fill(18,36,30,110);ellipse(x,y+3,43,14)
+    if not missing and frames[1] then
+        local action=hero.attack>0 and 2 or 1
+        local frame=1
+        if action==2 then frame=math.min(4,math.floor((.48-hero.attack)/.12)+1)
+        elseif joy and math.abs(joy.dx)+math.abs(joy.dy)>.12 then frame=math.floor(hero.walk*8)%4+1 end
+        local im=frames[action][hero.dir][frame]
+        if im then sprite(im,x,y+43,96,112) end
+    else
+        style.fill(42,88,172);rect(x-14,y+6,28,37)
+        style.fill(231,219,210);ellipse(x,y+51,24,23)
+    end
+end
+local function ui()
+    style.fill(16,25,42,230);rect(0,HEIGHT-94,WIDTH,94)
+    style.fill(244,213,149);fontSize(19);text('DRACORIA EVOLVED',WIDTH/2,HEIGHT-27)
+    style.fill(255);fontSize(14);text('TYDUS  •  BUILD 016',WIDTH/2,HEIGHT-63)
+    if missing then
+        style.fill(180,45,48,225);rect(12,HEIGHT-151,WIDTH-24,48)
+        style.fill(255);fontSize(14);text('Import TydusAtlas.png into Documents assets',WIDTH/2,HEIGHT-127)
+    end
+    local jx,jy=joy and joy.x or 87,joy and joy.y or 105
+    style.fill(30,53,81,170);ellipse(jx,jy,120,120)
+    style.fill(136,176,216,210)
+    ellipse(jx+(joy and joy.dx*37 or 0),jy+(joy and joy.dy*37 or 0),49,49)
+    style.fill(135,54,67,240);ellipse(WIDTH-85,104,100,100)
+    style.fill(255);fontSize(19);text('ATTACK',WIDTH-85,104)
 end
 function draw()
- local dt=math.min(DeltaTime or .016,.05)
- if mode=="creator" then drawCreator() else drawGame(dt) end
+    local dt=math.min(DeltaTime or .016,.05)
+    update(dt)
+    background(42,90,63)
+    local cx,cy=iso(hero.x,hero.y)
+    local gx,gy=math.floor(hero.x),math.floor(hero.y)
+    for y=gy-12,gy+12 do for x=gx-12,gx+12 do tile(x,y,cx,cy) end end
+    drawHero()
+    ui()
 end
 function touched(t)
- if mode=="creator" then
-  if t.state~=BEGAN then return end
-  local bottom=HEIGHT*.45;local y=bottom-93;local gap=5;local w=(WIDTH-36-3*gap)/4
-  if hit(t,20,20,WIDTH-40,60) then mode="game";joy=nil;return end
-  if hit(t,25,bottom+8,90,40) then facing=(facing+7)%8;return end
-  if hit(t,WIDTH-115,bottom+8,90,40) then facing=(facing+1)%8;return end
-  for i=1,4 do if hit(t,18+(i-1)*(w+gap),y,w,48) then
-   appearance[cats[selected][2]]=i;return end end
-  if hit(t,18,y-61,(WIDTH-42)/2,45) then selected=(selected-2+#cats)%#cats+1;return end
-  if hit(t,WIDTH/2+3,y-61,(WIDTH-42)/2,45) then selected=selected%#cats+1;return end
-  return
- end
- if t.state==BEGAN then
-  if hit(t,WIDTH-95,HEIGHT-73,78,45) then mode="creator";joy=nil;return end
-  if t.y<HEIGHT*.3 then joy={id=t.id,x=t.x,y=t.y,sx=0,sy=0,dx=0,dy=0} end
- elseif t.state==MOVING and joy and t.id==joy.id then
-  local dx,dy=t.x-joy.x,t.y-joy.y
-  local d=math.sqrt(dx*dx+dy*dy)
-  local power=math.min(d/45,1)
-  if d>0 then
-   joy.sx=dx/d*power;joy.sy=dy/d*power
-   joy.dx=(joy.sx*2+joy.sy)/math.sqrt(5)
-   joy.dy=(joy.sy-joy.sx*2)/math.sqrt(5)
-  end
- elseif (t.state==ENDED or t.state==CANCELLED) and joy and t.id==joy.id then joy=nil end
+    if t.state==BEGAN then
+        if t.x>WIDTH-155 and t.y<185 then
+            if hero.attack==0 then hero.attack=.48;hero.walk=0 end
+            return
+        end
+        if t.y<HEIGHT*.33 and t.x<WIDTH*.58 then
+            joy={id=t.id,x=t.x,y=t.y,dx=0,dy=0}
+        end
+    elseif t.state==MOVING and joy and joy.id==t.id then
+        local dx,dy=t.x-joy.x,t.y-joy.y
+        local m=math.sqrt(dx*dx+dy*dy)
+        local strength=math.min(1,m/47)
+        if m>0 then joy.dx=dx/m*strength;joy.dy=dy/m*strength end
+    elseif (t.state==ENDED or t.state==CANCELLED) and joy and joy.id==t.id then
+        joy=nil
+    end
 end
