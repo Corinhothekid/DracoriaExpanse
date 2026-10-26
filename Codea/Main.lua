@@ -122,10 +122,10 @@ local function loadCobble()
             local span=(1-dy)*cw/2
             for xx=0,cw-1 do
                 if math.abs(xx+.5-cw/2)<=span then
-                    local u=(xx+offsetX)%img.width
-                    local v=(yy+offsetY)%img.height
+                    local u=(xx+offsetX)%img.width+1
+                    local v=(yy+offsetY)%img.height+1
                     local r,g,b,a=img:get(u,v)
-                    tileImg:set(xx,yy,r,g,b,a or 255)
+                    tileImg:set(xx+1,yy+1,r,g,b,a or 255)
                 end
             end
         end
@@ -158,7 +158,6 @@ local function ground(x,y,px,py)
     if (r or plaza) and cobbleTiles[1] then
         -- One 48x24 diamond image per ground tile, same footprint as Build 017.
         local variant=math.floor(rnd(x,y,17)*4)+1
-        style.noTint()
         sprite(cobbleTiles[variant],px,py,TILE_X,TILE_Y)
     else
         diamond(px,py,c)
